@@ -70,7 +70,7 @@
 
     <!--Inline tasks not supported in xbuild-->
     <!--So we will use SmallApplicationVersion matched from AssemblyIdentityInfo in non Windows-->
-    <GetAssemblyIdentity AssemblyFiles="$(TargetPath)">
+    <GetAssemblyIdentity Condition="'$(OS)' == 'Windows_NT' AND $(NuGetUseExplicitVersion) == 'false'" AssemblyFiles="$(TargetPath)">
       <Output TaskParameter="Assemblies" ItemName="AssemblyIdentityInfo" />
     </GetAssemblyIdentity>
 
