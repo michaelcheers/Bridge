@@ -76,7 +76,7 @@
 
     <PropertyGroup>
       <FirstSymbolIfPercentNotSupported>%25</FirstSymbolIfPercentNotSupported>
-      <ApplicationVersion>%(AssemblyIdentityInfo.Version)</ApplicationVersion>
+      <ApplicationVersion Condition="'$(OS)' == 'Windows_NT' AND $(NuGetUseExplicitVersion) == 'false'">%(AssemblyIdentityInfo.Version)</ApplicationVersion>
       <CouldNotGetApplicationVersion Condition="'$(ApplicationVersion)' == '' OR '$(ApplicationVersion.StartsWith($(FirstSymbolIfPercentNotSupported)))' == 'true'">true</CouldNotGetApplicationVersion>
       <ApplicationVersion Condition="'$(CouldNotGetApplicationVersion)' == 'true'">$(DefaultPackageVersion)</ApplicationVersion>
     </PropertyGroup>
