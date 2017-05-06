@@ -10508,13 +10508,13 @@ Bridge.assembly("Bridge.ClientTest.Batch4", {"Bridge.ClientTest.Batch4.Reflectio
                 });
                 Bridge.Test.NUnit.Assert.True$1(b1, "GenericArguments");
 
-                Bridge.Test.NUnit.Assert.True$1(Bridge.is(Bridge.box(a, System.Int32, $box_.System.Nullable$1.toString), System.Int32), "is int? #1");
-                Bridge.Test.NUnit.Assert.False$1(Bridge.is(Bridge.box(b, System.Int32, $box_.System.Nullable$1.toString), System.Int32), "is int? #2");
+                Bridge.Test.NUnit.Assert.True$1(Bridge.is(Bridge.box(a, System.Int32, System.Nullable.toString, System.Nullable.getHashCode), System.Int32), "is int? #1");
+                Bridge.Test.NUnit.Assert.False$1(Bridge.is(Bridge.box(b, System.Int32, System.Nullable.toString, System.Nullable.getHashCode), System.Int32), "is int? #2");
 
                 Bridge.Test.NUnit.Assert.True$1(this.IsOfType(System.Nullable$1(System.Int32), Bridge.box(3, System.Int32)), "IsOfType #1");
-                Bridge.Test.NUnit.Assert.False$1(this.IsOfType(System.Nullable$1(System.Int32), Bridge.box(3.14, System.Double, $box_.System.Double.toString)), "IsOfType #2");
+                Bridge.Test.NUnit.Assert.False$1(this.IsOfType(System.Nullable$1(System.Int32), Bridge.box(3.14, System.Double, $box_.System.Double.toString, $box_.System.Double.getHashCode)), "IsOfType #2");
                 Bridge.Test.NUnit.Assert.True$1(this.IsOfType(System.Nullable$1(System.TimeSpan), new System.TimeSpan(System.Int64(1))), "IsOfType #3");
-                Bridge.Test.NUnit.Assert.False$1(this.IsOfType(System.Nullable$1(System.TimeSpan), Bridge.box(3.14, System.Double, $box_.System.Double.toString)), "IsOfType #4");
+                Bridge.Test.NUnit.Assert.False$1(this.IsOfType(System.Nullable$1(System.TimeSpan), Bridge.box(3.14, System.Double, $box_.System.Double.toString, $box_.System.Double.getHashCode)), "IsOfType #4");
             },
             ConvertingToNullableWorks: function () {
                 var i = 3;
@@ -10530,8 +10530,8 @@ Bridge.assembly("Bridge.ClientTest.Batch4", {"Bridge.ClientTest.Batch4.Reflectio
             },
             BoxingWorks: function () {
                 var a = 3, b = null;
-                Bridge.Test.NUnit.Assert.True(Bridge.box(a, System.Int32, $box_.System.Nullable$1.toString) != null);
-                Bridge.Test.NUnit.Assert.False(Bridge.box(b, System.Int32, $box_.System.Nullable$1.toString) != null);
+                Bridge.Test.NUnit.Assert.True(Bridge.box(a, System.Int32, System.Nullable.toString, System.Nullable.getHashCode) != null);
+                Bridge.Test.NUnit.Assert.False(Bridge.box(b, System.Int32, System.Nullable.toString, System.Nullable.getHashCode) != null);
             },
             UnboxingWorks: function () {
                 var a = 3, b = null;
@@ -13152,7 +13152,7 @@ Bridge.assembly("Bridge.ClientTest.Batch4", {"Bridge.ClientTest.Batch4.Reflectio
                 Bridge.Test.NUnit.Assert.AreEqual(System.Array.init([System.Int32, System.String], Function), (Bridge.Reflection.getMembers(Bridge.ClientTest.Batch4.Reflection.ReflectionTests.C24, 16, 284, "Item").p || []));
             },
             PropertiesForGetMethodAreCorrectForPropertyImplementedAsGetAndSetMethods: function () {
-                var $t, $t1;
+                var $t;
                 var m1 = Bridge.Reflection.getMembers(Bridge.ClientTest.Batch4.Reflection.ReflectionTests.C14, 16, 284, "P1").g;
                 var m2 = Bridge.Reflection.getMembers(Bridge.ClientTest.Batch4.Reflection.ReflectionTests.C14, 16, 284, "P3").g;
                 var m3 = Bridge.Reflection.getMembers(Bridge.ClientTest.Batch4.Reflection.ReflectionTests.C14, 16, 284, "P13").g;
@@ -13194,7 +13194,7 @@ Bridge.assembly("Bridge.ClientTest.Batch4", {"Bridge.ClientTest.Batch4.Reflectio
                 var p2 = Bridge.Reflection.midel(m2, null)(null);
                 Bridge.Test.NUnit.Assert.AreEqual$1(new Date(2012, 4 - 1, 2), Bridge.unbox(p2), "m2.Invoke");
 
-                c = ($t1=new Bridge.ClientTest.Batch4.Reflection.ReflectionTests.C14(), $t1.p13Field = 13, $t1);
+                c = ($t=new Bridge.ClientTest.Batch4.Reflection.ReflectionTests.C14(), $t.p13Field = 13, $t);
                 var p3 = Bridge.Reflection.midel(m3, c)(null);
                 Bridge.Test.NUnit.Assert.AreEqual$1(13, Bridge.unbox(p3), "m3.Invoke");
 
@@ -13316,7 +13316,7 @@ Bridge.assembly("Bridge.ClientTest.Batch4", {"Bridge.ClientTest.Batch4.Reflectio
                 Bridge.Test.NUnit.Assert.AreEqual$1(2.5, Bridge.ClientTest.Batch4.Reflection.ReflectionTests.C14.P4, "m2.Invoke");
             },
             PropertiesForGetMethodAreCorrectForIndexer: function () {
-                var $t, $t1;
+                var $t;
                 var m1 = Bridge.Reflection.getMembers(Bridge.ClientTest.Batch4.Reflection.ReflectionTests.C15, 16, 284, "Item").g;
                 var m2 = Bridge.Reflection.getMembers(Bridge.ClientTest.Batch4.Reflection.ReflectionTests.C24, 16, 284, "Item").g;
 
@@ -13343,7 +13343,7 @@ Bridge.assembly("Bridge.ClientTest.Batch4", {"Bridge.ClientTest.Batch4.Reflectio
                 var v1 = Bridge.Reflection.midel(m1, c1)(42, "Hello");
                 Bridge.Test.NUnit.Assert.AreEqual$1("X 42 Hello", Bridge.unbox(v1), "m1.Invoke");
 
-                var c2 = ($t1=new Bridge.ClientTest.Batch4.Reflection.ReflectionTests.C24(), $t1.v = "Y", $t1);
+                var c2 = ($t=new Bridge.ClientTest.Batch4.Reflection.ReflectionTests.C24(), $t.v = "Y", $t);
                 var v2 = Bridge.Reflection.midel(m2, c2)(24, "World");
                 Bridge.Test.NUnit.Assert.AreEqual$1("Y 24 World", Bridge.unbox(v2), "m2.Invoke");
             },
@@ -13451,7 +13451,7 @@ Bridge.assembly("Bridge.ClientTest.Batch4", {"Bridge.ClientTest.Batch4.Reflectio
                 Bridge.Test.NUnit.Assert.True$1(Bridge.Reflection.getMembers(Bridge.ClientTest.Batch4.Reflection.ReflectionTests.C17, 16, 284, "Item").s != null, "C17.SetMethod");
             },
             PropertyInfoGetValueWorks: function () {
-                var $t, $t1;
+                var $t;
                 var p1 = Bridge.Reflection.getMembers(Bridge.ClientTest.Batch4.Reflection.ReflectionTests.C14, 16, 284, "P1");
                 var p2 = Bridge.Reflection.getMembers(Bridge.ClientTest.Batch4.Reflection.ReflectionTests.C14, 16, 284, "P2");
                 var p3 = Bridge.Reflection.getMembers(Bridge.ClientTest.Batch4.Reflection.ReflectionTests.C14, 16, 284, "P3");
@@ -13466,7 +13466,7 @@ Bridge.assembly("Bridge.ClientTest.Batch4", {"Bridge.ClientTest.Batch4.Reflectio
                 Bridge.Test.NUnit.Assert.AreEqual$1(new Date(2013, 3 - 1, 5), Bridge.unbox(Bridge.Reflection.midel(p3.g, null)()), "P3.GetValue");
                 Bridge.Test.NUnit.Assert.AreEqual$1(7.5, Bridge.unbox(Bridge.Reflection.midel(p4.g, null)()), "P4.GetValue");
 
-                var c15 = ($t1=new Bridge.ClientTest.Batch4.Reflection.ReflectionTests.C15(), $t1.v = "X", $t1);
+                var c15 = ($t=new Bridge.ClientTest.Batch4.Reflection.ReflectionTests.C15(), $t.v = "X", $t);
                 Bridge.Test.NUnit.Assert.AreEqual$1("X 42 Hello", Bridge.unbox(Bridge.Reflection.midel(i.g, c15).apply(null, System.Array.init([Bridge.box(42, System.Int32), "Hello"], System.Object))), "Item.GetValue");
             },
             PropertyInfoSetValueWorks: function () {
@@ -16356,7 +16356,7 @@ Bridge.assembly("Bridge.ClientTest.Batch4", {"Bridge.ClientTest.Batch4.Reflectio
         methods: {
             TypePropertiesAreCorrect_SPI_1717: function () {
                 Bridge.Test.NUnit.Assert.True(Bridge.is(Bridge.box(0, System.Byte), System.Byte));
-                Bridge.Test.NUnit.Assert.False(Bridge.is(Bridge.box(0.5, System.Double, $box_.System.Double.toString), System.Byte));
+                Bridge.Test.NUnit.Assert.False(Bridge.is(Bridge.box(0.5, System.Double, $box_.System.Double.toString, $box_.System.Double.getHashCode), System.Byte));
                 Bridge.Test.NUnit.Assert.False(Bridge.is(Bridge.box(-1, System.Int32), System.Byte));
                 Bridge.Test.NUnit.Assert.False(Bridge.is(Bridge.box(256, System.Int32), System.Byte));
                 Bridge.Test.NUnit.Assert.AreEqual("System.Byte", Bridge.Reflection.getTypeFullName(System.Byte));
@@ -16552,7 +16552,7 @@ Bridge.assembly("Bridge.ClientTest.Batch4", {"Bridge.ClientTest.Batch4.Reflectio
         methods: {
             TypePropertiesAreInt32_SPI_1603: function () {
                 Bridge.Test.NUnit.Assert.False(Bridge.is(Bridge.box(0, System.Int32), System.Char));
-                Bridge.Test.NUnit.Assert.False(Bridge.is(Bridge.box(0.5, System.Double, $box_.System.Double.toString), System.Char));
+                Bridge.Test.NUnit.Assert.False(Bridge.is(Bridge.box(0.5, System.Double, $box_.System.Double.toString, $box_.System.Double.getHashCode), System.Char));
                 Bridge.Test.NUnit.Assert.False(Bridge.is(Bridge.box(-1, System.Int32), System.Char));
                 Bridge.Test.NUnit.Assert.False(Bridge.is(Bridge.box(65536, System.Int32), System.Char));
                 Bridge.Test.NUnit.Assert.AreEqual("System.Char", Bridge.Reflection.getTypeFullName(System.Char));
@@ -18619,7 +18619,7 @@ Bridge.assembly("Bridge.ClientTest.Batch4", {"Bridge.ClientTest.Batch4.Reflectio
             StaticEqualsWorks: function () {
                 Bridge.Test.NUnit.Assert.True(System.Decimal(0).equals(System.Decimal(0)));
                 Bridge.Test.NUnit.Assert.False(System.Decimal(1).equals(System.Decimal(0)));
-                Bridge.Test.NUnit.Assert.False(Bridge.equals(Bridge.box(0, System.Int32), Bridge.box(0.5, System.Double, $box_.System.Double.toString)));
+                Bridge.Test.NUnit.Assert.False(Bridge.equals(Bridge.box(0, System.Int32), Bridge.box(0.5, System.Double, $box_.System.Double.toString, $box_.System.Double.getHashCode)));
                 Bridge.Test.NUnit.Assert.True(System.Decimal(1).equals(System.Decimal(1)));
             },
             IEquatableEqualsWorks: function () {
@@ -19289,13 +19289,13 @@ Bridge.assembly("Bridge.ClientTest.Batch4", {"Bridge.ClientTest.Batch4.Reflectio
     Bridge.define("Bridge.ClientTest.Batch4.SimpleTypes.DoubleTests", {
         methods: {
             TypePropertiesAreCorrect_SPI_1717: function () {
-                Bridge.Test.NUnit.Assert.True(Bridge.is(Bridge.box(0.5, System.Double, $box_.System.Double.toString), System.Double));
+                Bridge.Test.NUnit.Assert.True(Bridge.is(Bridge.box(0.5, System.Double, $box_.System.Double.toString, $box_.System.Double.getHashCode), System.Double));
                 Bridge.Test.NUnit.Assert.AreEqual("System.Double", Bridge.Reflection.getTypeFullName(System.Double));
                 Bridge.Test.NUnit.Assert.False(Bridge.Reflection.isClass(System.Double));
                 Bridge.Test.NUnit.Assert.True(Bridge.Reflection.isAssignableFrom(System.IComparable$1(System.Double), System.Double));
                 Bridge.Test.NUnit.Assert.True(Bridge.Reflection.isAssignableFrom(System.IEquatable$1(System.Double), System.Double));
                 Bridge.Test.NUnit.Assert.True(Bridge.Reflection.isAssignableFrom(System.IFormattable, System.Double));
-                var d = Bridge.box(0.0, System.Double, $box_.System.Double.toString);
+                var d = Bridge.box(0.0, System.Double, $box_.System.Double.toString, $box_.System.Double.getHashCode);
                 Bridge.Test.NUnit.Assert.True(Bridge.is(d, System.Double));
                 Bridge.Test.NUnit.Assert.True(Bridge.is(d, System.IComparable$1(System.Double)));
                 Bridge.Test.NUnit.Assert.True(Bridge.is(d, System.IEquatable$1(System.Double)));
@@ -19318,8 +19318,8 @@ Bridge.assembly("Bridge.ClientTest.Batch4", {"Bridge.ClientTest.Batch4.Reflectio
             },
             ConstantsWork: function () {
                 var zero = 0;
-                Bridge.Test.NUnit.Assert.True$1(System.Double.min < System.Nullable.getValue(Bridge.cast(Bridge.unbox(Bridge.box(-1.7E+308, System.Double, $box_.System.Double.toString)), System.Double)), "MinValue should be correct");
-                Bridge.Test.NUnit.Assert.True$1(System.Double.max > System.Nullable.getValue(Bridge.cast(Bridge.unbox(Bridge.box(1.7E+308, System.Double, $box_.System.Double.toString)), System.Double)), "MaxValue should be correct");
+                Bridge.Test.NUnit.Assert.True$1(System.Double.min < System.Nullable.getValue(Bridge.cast(Bridge.unbox(Bridge.box(-1.7E+308, System.Double, $box_.System.Double.toString, $box_.System.Double.getHashCode)), System.Double)), "MinValue should be correct");
+                Bridge.Test.NUnit.Assert.True$1(System.Double.max > System.Nullable.getValue(Bridge.cast(Bridge.unbox(Bridge.box(1.7E+308, System.Double, $box_.System.Double.toString, $box_.System.Double.getHashCode)), System.Double)), "MaxValue should be correct");
                 // Not C# API
                 //Assert.AreEqual(double.JsMinValue, 5e-324, "MinValue should be correct");
                 Bridge.Test.NUnit.Assert.AreEqual$1(4.94065645841247E-324, 4.94065645841247E-324, "MinValue should be correct");
@@ -19405,10 +19405,10 @@ Bridge.assembly("Bridge.ClientTest.Batch4", {"Bridge.ClientTest.Batch4.Reflectio
                 Bridge.Test.NUnit.Assert.AreNotEqual(System.Double.getHashCode((0.5)), System.Double.getHashCode((0.0)));
             },
             EqualsWorks: function () {
-                Bridge.Test.NUnit.Assert.True(System.Double.equals((0.0), Bridge.box(0.0, System.Double, $box_.System.Double.toString)));
-                Bridge.Test.NUnit.Assert.False(System.Double.equals((1.0), Bridge.box(0.0, System.Double, $box_.System.Double.toString)));
-                Bridge.Test.NUnit.Assert.False(System.Double.equals((0.0), Bridge.box(0.5, System.Double, $box_.System.Double.toString)));
-                Bridge.Test.NUnit.Assert.True(System.Double.equals((1.0), Bridge.box(1.0, System.Double, $box_.System.Double.toString)));
+                Bridge.Test.NUnit.Assert.True(System.Double.equals((0.0), Bridge.box(0.0, System.Double, $box_.System.Double.toString, $box_.System.Double.getHashCode)));
+                Bridge.Test.NUnit.Assert.False(System.Double.equals((1.0), Bridge.box(0.0, System.Double, $box_.System.Double.toString, $box_.System.Double.getHashCode)));
+                Bridge.Test.NUnit.Assert.False(System.Double.equals((0.0), Bridge.box(0.5, System.Double, $box_.System.Double.toString, $box_.System.Double.getHashCode)));
+                Bridge.Test.NUnit.Assert.True(System.Double.equals((1.0), Bridge.box(1.0, System.Double, $box_.System.Double.toString, $box_.System.Double.getHashCode)));
             },
             IEquatableEqualsWorks: function () {
                 Bridge.Test.NUnit.Assert.True((0.0) === 0.0);
@@ -19514,7 +19514,7 @@ Bridge.assembly("Bridge.ClientTest.Batch4", {"Bridge.ClientTest.Batch4.Reflectio
 
     Bridge.apply($asm.$.Bridge.ClientTest.Batch4.SimpleTypes.EnumTests, {
         f1: function () {
-            var _ = System.Nullable.getValue(Bridge.cast(Bridge.unbox(Bridge.box(0.5, System.Double, $box_.System.Double.toString)), System.Int32));
+            var _ = System.Nullable.getValue(Bridge.cast(Bridge.unbox(Bridge.box(0.5, System.Double, $box_.System.Double.toString, $box_.System.Double.getHashCode)), System.Int32));
         }
     });
 
@@ -19546,7 +19546,7 @@ Bridge.assembly("Bridge.ClientTest.Batch4", {"Bridge.ClientTest.Batch4.Reflectio
         methods: {
             TypePropertiesAreCorrect_SPI_1717: function () {
                 Bridge.Test.NUnit.Assert.True(Bridge.is(Bridge.box(0, System.Int16), System.Int16));
-                Bridge.Test.NUnit.Assert.False(Bridge.is(Bridge.box(0.5, System.Double, $box_.System.Double.toString), System.Int16));
+                Bridge.Test.NUnit.Assert.False(Bridge.is(Bridge.box(0.5, System.Double, $box_.System.Double.toString, $box_.System.Double.getHashCode), System.Int16));
                 Bridge.Test.NUnit.Assert.False(Bridge.is(Bridge.box(-32769, System.Int32), System.Int16));
                 Bridge.Test.NUnit.Assert.False(Bridge.is(Bridge.box(32768, System.Int32), System.Int16));
                 Bridge.Test.NUnit.Assert.AreEqual("System.Int16", Bridge.Reflection.getTypeFullName(System.Int16));
@@ -19742,7 +19742,7 @@ Bridge.assembly("Bridge.ClientTest.Batch4", {"Bridge.ClientTest.Batch4.Reflectio
         methods: {
             TypePropertiesAreCorrect_SPI_1717: function () {
                 Bridge.Test.NUnit.Assert.True(Bridge.is(Bridge.box(0, System.Int32), System.Int32));
-                Bridge.Test.NUnit.Assert.False(Bridge.is(Bridge.box(0.5, System.Double, $box_.System.Double.toString), System.Int32));
+                Bridge.Test.NUnit.Assert.False(Bridge.is(Bridge.box(0.5, System.Double, $box_.System.Double.toString, $box_.System.Double.getHashCode), System.Int32));
                 Bridge.Test.NUnit.Assert.False(Bridge.is(System.Int64([2147483647,-1]), System.Int32));
                 Bridge.Test.NUnit.Assert.False(Bridge.is(Bridge.box(2147483648, System.UInt32), System.Int32));
                 Bridge.Test.NUnit.Assert.AreEqual("System.Int32", Bridge.Reflection.getTypeFullName(System.Int32));
@@ -19802,20 +19802,20 @@ Bridge.assembly("Bridge.ClientTest.Batch4", {"Bridge.ClientTest.Batch4.Reflectio
             },
             TypeIsWorksForInt32: function () {
                 Bridge.Test.NUnit.Assert.False(Bridge.is(null, System.Int32));
-                Bridge.Test.NUnit.Assert.False(Bridge.is(Bridge.box(1.5, System.Double, $box_.System.Double.toString), System.Int32));
+                Bridge.Test.NUnit.Assert.False(Bridge.is(Bridge.box(1.5, System.Double, $box_.System.Double.toString, $box_.System.Double.getHashCode), System.Int32));
                 Bridge.Test.NUnit.Assert.False(Bridge.is({  }, System.Int32));
                 Bridge.Test.NUnit.Assert.True(Bridge.is(Bridge.box(1, System.Int32), System.Int32));
             },
             TypeAsWorksForInt32: function () {
                 Bridge.Test.NUnit.Assert.False((null) != null);
                 Bridge.Test.NUnit.Assert.False((Bridge.as({  }, System.Int32, true)) != null);
-                Bridge.Test.NUnit.Assert.False((Bridge.as(Bridge.box(1.5, System.Double, $box_.System.Double.toString), System.Int32, true)) != null);
+                Bridge.Test.NUnit.Assert.False((Bridge.as(Bridge.box(1.5, System.Double, $box_.System.Double.toString, $box_.System.Double.getHashCode), System.Int32, true)) != null);
                 Bridge.Test.NUnit.Assert.True((Bridge.as(1, System.Int32, true)) != null);
             },
             UnboxingWorksForInt32: function () {
                 var _null = null;
                 var o = {  };
-                var d = Bridge.box(1.5, System.Double, $box_.System.Double.toString);
+                var d = Bridge.box(1.5, System.Double, $box_.System.Double.toString, $box_.System.Double.getHashCode);
                 var i = Bridge.box(1, System.Int32);
                 Bridge.Test.NUnit.Assert.AreEqual(null, Bridge.cast(Bridge.unbox(_null), System.Int32, true));
                 Bridge.Test.NUnit.Assert.Throws(function () {
@@ -19999,8 +19999,8 @@ Bridge.assembly("Bridge.ClientTest.Batch4", {"Bridge.ClientTest.Batch4.Reflectio
         methods: {
             TypePropertiesAreCorrect_SPI_1717: function () {
                 Bridge.Test.NUnit.Assert.True(Bridge.is(System.Int64(0), System.Int64));
-                Bridge.Test.NUnit.Assert.False(Bridge.is(Bridge.box(0.5, System.Double, $box_.System.Double.toString), System.Int64));
-                Bridge.Test.NUnit.Assert.False(Bridge.is(Bridge.box(1E+100, System.Double, $box_.System.Double.toString), System.Int64));
+                Bridge.Test.NUnit.Assert.False(Bridge.is(Bridge.box(0.5, System.Double, $box_.System.Double.toString, $box_.System.Double.getHashCode), System.Int64));
+                Bridge.Test.NUnit.Assert.False(Bridge.is(Bridge.box(1E+100, System.Double, $box_.System.Double.toString, $box_.System.Double.getHashCode), System.Int64));
                 Bridge.Test.NUnit.Assert.AreEqual("System.Int64", Bridge.Reflection.getTypeFullName(System.Int64));
                 Bridge.Test.NUnit.Assert.False(Bridge.Reflection.isClass(System.Int64));
                 Bridge.Test.NUnit.Assert.True(Bridge.Reflection.isAssignableFrom(System.IComparable$1(System.Int64), System.Int64));
@@ -20248,7 +20248,7 @@ Bridge.assembly("Bridge.ClientTest.Batch4", {"Bridge.ClientTest.Batch4.Reflectio
         methods: {
             TypePropertiesAreCorrect_SPI_1717: function () {
                 Bridge.Test.NUnit.Assert.False(Bridge.is(Bridge.box(0, System.Byte), System.SByte));
-                Bridge.Test.NUnit.Assert.False(Bridge.is(Bridge.box(0.5, System.Double, $box_.System.Double.toString), System.SByte));
+                Bridge.Test.NUnit.Assert.False(Bridge.is(Bridge.box(0.5, System.Double, $box_.System.Double.toString, $box_.System.Double.getHashCode), System.SByte));
                 Bridge.Test.NUnit.Assert.False(Bridge.is(Bridge.box(-129, System.Int32), System.SByte));
                 Bridge.Test.NUnit.Assert.False(Bridge.is(Bridge.box(128, System.Int32), System.SByte));
                 Bridge.Test.NUnit.Assert.AreEqual("System.SByte", Bridge.Reflection.getTypeFullName(System.SByte));
@@ -20439,13 +20439,13 @@ Bridge.assembly("Bridge.ClientTest.Batch4", {"Bridge.ClientTest.Batch4.Reflectio
     Bridge.define("Bridge.ClientTest.Batch4.SimpleTypes.SingleTests", {
         methods: {
             TypePropertiesAreCorrect_SPI_1717: function () {
-                Bridge.Test.NUnit.Assert.True(Bridge.is(Bridge.box(0.5, System.Single, $box_.System.Single.toString), System.Single));
+                Bridge.Test.NUnit.Assert.True(Bridge.is(Bridge.box(0.5, System.Single, $box_.System.Single.toString, $box_.System.Single.getHashCode), System.Single));
                 Bridge.Test.NUnit.Assert.AreEqual("System.Single", Bridge.Reflection.getTypeFullName(System.Single));
                 Bridge.Test.NUnit.Assert.False(Bridge.Reflection.isClass(System.Single));
                 Bridge.Test.NUnit.Assert.True(Bridge.Reflection.isAssignableFrom(System.IComparable$1(System.Single), System.Single));
                 Bridge.Test.NUnit.Assert.True(Bridge.Reflection.isAssignableFrom(System.IEquatable$1(System.Single), System.Single));
                 Bridge.Test.NUnit.Assert.True(Bridge.Reflection.isAssignableFrom(System.IFormattable, System.Single));
-                var f = Bridge.box(0.0, System.Single, $box_.System.Single.toString);
+                var f = Bridge.box(0.0, System.Single, $box_.System.Single.toString, $box_.System.Single.getHashCode);
                 Bridge.Test.NUnit.Assert.True(Bridge.is(f, System.Single));
                 Bridge.Test.NUnit.Assert.True(Bridge.is(f, System.IComparable$1(System.Single)));
                 Bridge.Test.NUnit.Assert.True(Bridge.is(f, System.IEquatable$1(System.Single)));
@@ -20468,8 +20468,8 @@ Bridge.assembly("Bridge.ClientTest.Batch4", {"Bridge.ClientTest.Batch4.Reflectio
             },
             ConstantsWork: function () {
                 var zero = 0;
-                Bridge.Test.NUnit.Assert.True$1(System.Nullable.getValue(Bridge.cast(Bridge.unbox(Bridge.box(-3.40282347E+38, System.Single, $box_.System.Single.toString)), System.Single)) < -3.4E+38 && System.Nullable.getValue(Bridge.cast(Bridge.unbox(Bridge.box(-3.40282347E+38, System.Single, $box_.System.Single.toString)), System.Single)) > -3.5E+38, "MinValue should be correct");
-                Bridge.Test.NUnit.Assert.True$1(System.Nullable.getValue(Bridge.cast(Bridge.unbox(Bridge.box(3.40282347E+38, System.Single, $box_.System.Single.toString)), System.Single)) > 3.4E+38 && System.Nullable.getValue(Bridge.cast(Bridge.unbox(Bridge.box(3.40282347E+38, System.Single, $box_.System.Single.toString)), System.Single)) < 3.5E+38, "MaxValue should be correct");
+                Bridge.Test.NUnit.Assert.True$1(System.Nullable.getValue(Bridge.cast(Bridge.unbox(Bridge.box(-3.40282347E+38, System.Single, $box_.System.Single.toString, $box_.System.Single.getHashCode)), System.Single)) < -3.4E+38 && System.Nullable.getValue(Bridge.cast(Bridge.unbox(Bridge.box(-3.40282347E+38, System.Single, $box_.System.Single.toString, $box_.System.Single.getHashCode)), System.Single)) > -3.5E+38, "MinValue should be correct");
+                Bridge.Test.NUnit.Assert.True$1(System.Nullable.getValue(Bridge.cast(Bridge.unbox(Bridge.box(3.40282347E+38, System.Single, $box_.System.Single.toString, $box_.System.Single.getHashCode)), System.Single)) > 3.4E+38 && System.Nullable.getValue(Bridge.cast(Bridge.unbox(Bridge.box(3.40282347E+38, System.Single, $box_.System.Single.toString, $box_.System.Single.getHashCode)), System.Single)) < 3.5E+38, "MaxValue should be correct");
                 Bridge.Test.NUnit.Assert.AreEqual$1(1.401298E-45, 1.401298E-45, "Epsilon should be correct");
                 Bridge.Test.NUnit.Assert.True$1(isNaN(Number.NaN), "NaN should be correct");
                 Bridge.Test.NUnit.Assert.AreStrictEqual$1(1 / zero, Number.POSITIVE_INFINITY, "PositiveInfinity should be correct");
@@ -20553,10 +20553,10 @@ Bridge.assembly("Bridge.ClientTest.Batch4", {"Bridge.ClientTest.Batch4.Reflectio
                 Bridge.Test.NUnit.Assert.AreNotEqual(System.Single.getHashCode((0.5)), System.Single.getHashCode((0.0)));
             },
             EqualsWorks: function () {
-                Bridge.Test.NUnit.Assert.True(System.Single.equals((0.0), Bridge.box(0.0, System.Single, $box_.System.Single.toString)));
-                Bridge.Test.NUnit.Assert.False(System.Single.equals((1.0), Bridge.box(0.0, System.Single, $box_.System.Single.toString)));
-                Bridge.Test.NUnit.Assert.False(System.Single.equals((0.0), Bridge.box(0.5, System.Single, $box_.System.Single.toString)));
-                Bridge.Test.NUnit.Assert.True(System.Single.equals((1.0), Bridge.box(1.0, System.Single, $box_.System.Single.toString)));
+                Bridge.Test.NUnit.Assert.True(System.Single.equals((0.0), Bridge.box(0.0, System.Single, $box_.System.Single.toString, $box_.System.Single.getHashCode)));
+                Bridge.Test.NUnit.Assert.False(System.Single.equals((1.0), Bridge.box(0.0, System.Single, $box_.System.Single.toString, $box_.System.Single.getHashCode)));
+                Bridge.Test.NUnit.Assert.False(System.Single.equals((0.0), Bridge.box(0.5, System.Single, $box_.System.Single.toString, $box_.System.Single.getHashCode)));
+                Bridge.Test.NUnit.Assert.True(System.Single.equals((1.0), Bridge.box(1.0, System.Single, $box_.System.Single.toString, $box_.System.Single.getHashCode)));
             },
             IEquatableEqualsWorks: function () {
                 Bridge.Test.NUnit.Assert.True((0.0) === 0.0);
@@ -20726,12 +20726,12 @@ Bridge.assembly("Bridge.ClientTest.Batch4", {"Bridge.ClientTest.Batch4.Reflectio
                 Bridge.Test.NUnit.Assert.AreEqual("xabcd", System.String.format.apply(System.String, ["x{0}{1}{2}{3}"].concat(arr4)));
             },
             FormatWorksWithIFormattable_SPI_1598: function () {
-                Bridge.Test.NUnit.Assert.AreEqual("3.14", System.String.format("{0:F2}", Bridge.box(3.1428571428571428, System.Double, $box_.System.Double.toString)));
+                Bridge.Test.NUnit.Assert.AreEqual("3.14", System.String.format("{0:F2}", Bridge.box(3.1428571428571428, System.Double, $box_.System.Double.toString, $box_.System.Double.getHashCode)));
                 // #1598
                 Bridge.Test.NUnit.Assert.AreEqual("Formatted: FMT, null formatProvider", System.String.format("{0:FMT}", new Bridge.ClientTest.Batch4.SimpleTypes.StringTests.MyFormattable()));
             },
             FormatWorksWithIFormattableAndFormatProvider_SPI_1598: function () {
-                Bridge.Test.NUnit.Assert.AreEqual("3.14", System.String.formatProvider(new Bridge.ClientTest.Batch4.SimpleTypes.StringTests.MyFormatProvider(), "{0:F2}", Bridge.box(3.1428571428571428, System.Double, $box_.System.Double.toString)));
+                Bridge.Test.NUnit.Assert.AreEqual("3.14", System.String.formatProvider(new Bridge.ClientTest.Batch4.SimpleTypes.StringTests.MyFormatProvider(), "{0:F2}", Bridge.box(3.1428571428571428, System.Double, $box_.System.Double.toString, $box_.System.Double.getHashCode)));
                 // #1598
                 Bridge.Test.NUnit.Assert.AreEqual("Formatted: FMT, StringTests+MyFormatProvider", System.String.formatProvider(new Bridge.ClientTest.Batch4.SimpleTypes.StringTests.MyFormatProvider(), "{0:FMT}", new Bridge.ClientTest.Batch4.SimpleTypes.StringTests.MyFormattable()));
             },
@@ -21453,7 +21453,7 @@ Bridge.assembly("Bridge.ClientTest.Batch4", {"Bridge.ClientTest.Batch4.Reflectio
         methods: {
             TypePropertiesAreCorrect_SPI_1717: function () {
                 Bridge.Test.NUnit.Assert.True(Bridge.is(Bridge.box(0, System.UInt16), System.UInt16));
-                Bridge.Test.NUnit.Assert.False(Bridge.is(Bridge.box(0.5, System.Double, $box_.System.Double.toString), System.UInt16));
+                Bridge.Test.NUnit.Assert.False(Bridge.is(Bridge.box(0.5, System.Double, $box_.System.Double.toString, $box_.System.Double.getHashCode), System.UInt16));
                 Bridge.Test.NUnit.Assert.False(Bridge.is(Bridge.box(-1, System.Int32), System.UInt16));
                 Bridge.Test.NUnit.Assert.False(Bridge.is(Bridge.box(65536, System.Int32), System.UInt16));
                 Bridge.Test.NUnit.Assert.AreEqual("System.UInt16", Bridge.Reflection.getTypeFullName(System.UInt16));
@@ -21648,7 +21648,7 @@ Bridge.assembly("Bridge.ClientTest.Batch4", {"Bridge.ClientTest.Batch4.Reflectio
         methods: {
             TypePropertiesAreCorrect_SPI_1717: function () {
                 Bridge.Test.NUnit.Assert.False(Bridge.is(Bridge.box(0, System.Int32), System.UInt32));
-                Bridge.Test.NUnit.Assert.False(Bridge.is(Bridge.box(0.5, System.Double, $box_.System.Double.toString), System.UInt32));
+                Bridge.Test.NUnit.Assert.False(Bridge.is(Bridge.box(0.5, System.Double, $box_.System.Double.toString, $box_.System.Double.getHashCode), System.UInt32));
                 Bridge.Test.NUnit.Assert.False(Bridge.is(Bridge.box(-1, System.Int32), System.UInt32));
                 Bridge.Test.NUnit.Assert.False(Bridge.is(System.Int64([0,1]), System.UInt32));
                 Bridge.Test.NUnit.Assert.AreEqual("System.UInt32", Bridge.Reflection.getTypeFullName(System.UInt32));
@@ -21839,7 +21839,7 @@ Bridge.assembly("Bridge.ClientTest.Batch4", {"Bridge.ClientTest.Batch4.Reflectio
         methods: {
             TypePropertiesAreCorrect_SPI_1717: function () {
                 Bridge.Test.NUnit.Assert.True(Bridge.is(System.UInt64(0), System.UInt64));
-                Bridge.Test.NUnit.Assert.False(Bridge.is(Bridge.box(0.5, System.Double, $box_.System.Double.toString), System.UInt64));
+                Bridge.Test.NUnit.Assert.False(Bridge.is(Bridge.box(0.5, System.Double, $box_.System.Double.toString, $box_.System.Double.getHashCode), System.UInt64));
                 Bridge.Test.NUnit.Assert.AreEqual("System.UInt64", Bridge.Reflection.getTypeFullName(System.UInt64));
                 Bridge.Test.NUnit.Assert.False(Bridge.Reflection.isClass(System.UInt64));
                 Bridge.Test.NUnit.Assert.True(Bridge.Reflection.isAssignableFrom(System.IComparable$1(System.UInt64), System.UInt64));
@@ -26555,17 +26555,11 @@ Bridge.assembly("Bridge.ClientTest.Batch4", {"Bridge.ClientTest.Batch4.Reflectio
 
     var $box_ = {};
 
-    Bridge.ns("System.Nullable$1", $box_);
-
-    Bridge.apply($box_.System.Nullable$1, {
-        toString: function (obj) {return System.Nullable.toString(obj);}
-    });
-
-
     Bridge.ns("System.Double", $box_);
 
     Bridge.apply($box_.System.Double, {
-        toString: function (obj) {return System.Double.format(obj, 'G');}
+        toString: function (obj) {return System.Double.format(obj, 'G');},
+        getHashCode: function (obj) {return System.Double.getHashCode(obj);}
     });
 
 
@@ -26642,7 +26636,8 @@ Bridge.assembly("Bridge.ClientTest.Batch4", {"Bridge.ClientTest.Batch4.Reflectio
     Bridge.ns("System.Single", $box_);
 
     Bridge.apply($box_.System.Single, {
-        toString: function (obj) {return System.Single.format(obj, 'G');}
+        toString: function (obj) {return System.Single.format(obj, 'G');},
+        getHashCode: function (obj) {return System.Single.getHashCode(obj);}
     });
 
     var $m = Bridge.setMetadata,
