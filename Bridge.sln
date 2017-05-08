@@ -66,12 +66,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "common", "common", "{3E6E25
 		.build\common\NuGet.Build.Package.targets = .build\common\NuGet.Build.Package.targets
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bridge.PostBuild", "PostBuild\Bridge.PostBuild.csproj", "{8DAF3989-FF37-470C-A55D-3E7868613AA5}"
-	ProjectSection(ProjectDependencies) = postProject
-		{243BB709-3912-4C65-82D4-787A5E2201D7} = {243BB709-3912-4C65-82D4-787A5E2201D7}
-		{DE78B8B7-C0F5-415B-A70B-02194433F450} = {DE78B8B7-C0F5-415B-A70B-02194433F450}
-	EndProjectSection
-EndProject
 Project("{9344BDBB-3E7F-41FC-A0DD-8665D75EE146}") = "Bridge.Translator.Tests", "Compiler\TranslatorTests\Bridge.Translator.Tests.csproj", "{651EABC1-38FF-420E-8948-AB9A1C726D21}"
 	ProjectSection(ProjectDependencies) = postProject
 		{243BB709-3912-4C65-82D4-787A5E2201D7} = {243BB709-3912-4C65-82D4-787A5E2201D7}
@@ -83,6 +77,12 @@ EndProject
 Project("{9344BDBB-3E7F-41FC-A0DD-8665D75EE146}") = "Bridge.Translator.Tests.Assembly", "Compiler\TranslatorTestsAssembly\Bridge.Translator.Tests.Assembly.csproj", "{2C08B6C9-B30D-481A-891B-F8EFE8C9838D}"
 	ProjectSection(ProjectDependencies) = postProject
 		{8DAF3989-FF37-470C-A55D-3E7868613AA5} = {8DAF3989-FF37-470C-A55D-3E7868613AA5}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bridge.PostBuild", "PostBuild\Bridge.PostBuild.csproj", "{8DAF3989-FF37-470C-A55D-3E7868613AA5}"
+	ProjectSection(ProjectDependencies) = postProject
+		{243BB709-3912-4C65-82D4-787A5E2201D7} = {243BB709-3912-4C65-82D4-787A5E2201D7}
+		{DE78B8B7-C0F5-415B-A70B-02194433F450} = {DE78B8B7-C0F5-415B-A70B-02194433F450}
 	EndProjectSection
 EndProject
 Global
