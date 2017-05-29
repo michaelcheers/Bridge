@@ -134,7 +134,7 @@ namespace Bridge.Translator
             this.WriteTopInitMethods();
 
             var typeDef = this.Emitter.GetTypeDefinition();
-            string name = this.Emitter.Validator.GetCustomTypeName(typeDef, this.Emitter);
+            string name = this.Emitter.Validator.GetCustomTypeName(typeDef, this.Emitter, false);
             this.IsGeneric = typeDef.GenericParameters.Count > 0 && !Helpers.IsIgnoreGeneric(this.TypeInfo.Type, this.Emitter);
 
             if (name.IsEmpty())
@@ -621,7 +621,7 @@ namespace Bridge.Translator
                 {
                     var level = this.Emitter.Level;
 
-                    this.PushWriter(JS.Types.Bridge.INIT + "(function (){0});");
+                    this.PushWriter(JS.Types.Bridge.INIT + "(function () {0});");
                     this.ResetLocals();
                     var prevMap = this.BuildLocalsMap();
                     var prevNamesMap = this.BuildLocalsNamesMap();

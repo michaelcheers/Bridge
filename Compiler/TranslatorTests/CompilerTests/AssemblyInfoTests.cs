@@ -3,7 +3,7 @@ using Bridge.Translator.Utils;
 using System;
 using System.Collections.Generic;
 using NUnit.Framework;
-using NSubstitute;
+using Newtonsoft.Json;
 
 
 namespace Bridge.Translator.Tests
@@ -53,7 +53,9 @@ namespace Bridge.Translator.Tests
             Assert.Null(config.OverflowMode, "OverflowMode");
             Assert.Null(config.NoLoggerTimeStamps, "NoLoggerTimeStamps");
             Assert.False(config.StrictNullChecks, "StrictNullChecks");
-            Assert.False(config.EnableNamedFunctionExpressions, "EnableNamedFunctionExpressions");
+            Assert.AreEqual(NamedFunctionMode.None, config.NamedFunctions, "NamedFunctions");
+            Assert.False(config.SourceMap.Enabled, "SourceMap.Enabled");
+            Assert.Null(config.SourceMap.Eol, "SourceMap.Eol");
         }
     }
 }

@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using ICSharpCode.NRefactory.Utils;
+using TopologicalSorting;
 using AssemblyDefinition = Mono.Cecil.AssemblyDefinition;
 
 namespace Bridge.Translator
@@ -172,6 +174,7 @@ namespace Bridge.Translator
             logger.Info("Before emitting done");
 
             this.Outputs = emitter.Emit();
+            this.EmitterOutputs = emitter.Outputs;
 
             logger.Info("After emitting...");
             this.Plugins.AfterEmit(emitter, this);
@@ -210,41 +213,100 @@ namespace Bridge.Translator
             return resolver;
         }
 
+        private Stack<AssemblyDefinition> activeAssemblies;
+        private IList<AssemblyDefinition> GetParentAssemblies(AssemblyDefinition asm, List<AssemblyDefinition> list = null)
+        {
+            bool endPoint = list == null;
+            if (endPoint)
+            {
+                activeAssemblies = new Stack<AssemblyDefinition>();
+                list = new List<AssemblyDefinition>();
+            }
+
+            if (activeAssemblies.Any(r => r.FullName == asm.FullName))
+            {
+                return list;
+            }
+
+            activeAssemblies.Push(asm);
+
+            foreach (var assemblyReferenceName in asm.MainModule.AssemblyReferences)
+            {
+                var assemblyReference = asm.MainModule.AssemblyResolver.Resolve(assemblyReferenceName);
+                if (list.All(r => r.FullName != assemblyReference.FullName))
+                {
+                    list.Add(assemblyReference);
+                }
+
+                GetParentAssemblies(assemblyReference, list);
+            }
+
+            activeAssemblies.Pop();
+            return list;
+        }
+
         protected virtual void SortReferences()
         {
-            this.Log.Info("Sorting " + (this.References != null ? this.References.Count().ToString() : "no") + " reference(s)...");
+            var graph = new TopologicalSorting.DependencyGraph();
 
-            var list = this.References.ToList();
-            list.Sort((r1, r2) =>
+            foreach (var t in this.References)
             {
-                if (r1.Name.Name == CS.NS.ROOT)
+                var parents = this.GetParentAssemblies(t);
+                var tProcess = graph.Processes.FirstOrDefault(p => p.Name == t.FullName);
+                if (tProcess == null)
                 {
-                    return -1;
+                    tProcess = new TopologicalSorting.OrderedProcess(graph, t.FullName);
                 }
 
-                if (r2.Name.Name == CS.NS.ROOT)
+                for (int i = parents.Count - 1; i > -1; i--)
                 {
-                    return 1;
+                    var x = parents[i];
+                    if (tProcess.Predecessors.All(p => p.Name != x.FullName))
+                    {
+                        var dProcess = graph.Processes.FirstOrDefault(p => p.Name == x.FullName);
+                        if (dProcess == null)
+                        {
+                            dProcess = new TopologicalSorting.OrderedProcess(graph, x.FullName);
+                        }
+
+                        if (tProcess != dProcess && dProcess.Predecessors.All(p => p.Name != tProcess.Name))
+                        {
+                            tProcess.After(dProcess);
+                        }
+                    }
                 }
+            }
 
-                var references1 = r1.MainModule.AssemblyReferences;
-                var references2 = r2.MainModule.AssemblyReferences;
+            if (graph.ProcessCount > 0)
+            {
+                AssemblyDefinition asmDef = null;
 
-                if (references1.Any(r => r.FullName == r2.FullName))
+                try
                 {
-                    return 1;
-                }
+                    IEnumerable<IEnumerable<OrderedProcess>> sorted = graph.CalculateSort();
 
-                if (references2.Any(r => r.FullName == r1.FullName))
+                    var list = new List<AssemblyDefinition>(this.References.Count());
+                    foreach (var processes in sorted)
+                    {
+                        foreach (var process in processes)
+                        {
+                            asmDef = this.References.First(r => r.FullName == process.Name);
+                            if (list.All(r => r.FullName != asmDef.FullName))
+                            {
+                                list.Add(asmDef);
+                            }
+                        }
+                    }
+
+                    this.References = list;
+                }
+                catch (System.Exception ex)
                 {
-                    return -1;
+                    this.Log.Warn(string.Format("Topological sort failed {0} with error {1}", asmDef != null ? "at reference " + asmDef.FullName : string.Empty, ex));
                 }
-                return 0;
-            });
+            }
 
-            this.References = list;
-
-            this.Log.Info("Sorting references done");
+            activeAssemblies = null;
         }
 
         public virtual string GetCode()
@@ -333,6 +395,12 @@ namespace Bridge.Translator
                 {
                     var file = CreateFileDirectory(filePath);
                     logger.Trace("Output non-minified " + file.FullName);
+
+                    if (!this.AssemblyInfo.CombineScripts && isJs)
+                    {
+                        code = this.GenerateSourceMap(file.FullName, code);
+                    }
+
                     this.SaveToFile(file.FullName, code);
                     files.Add(fileName, file.FullName);
                 }
@@ -348,6 +416,11 @@ namespace Bridge.Translator
 
                     var contentMinified = this.Minify(minifier, code, this.GetMinifierSettings(fileNameMin));
 
+                    if (!this.AssemblyInfo.CombineScripts)
+                    {
+                        contentMinified = this.GenerateSourceMap(file.FullName, contentMinified);
+                    }
+
                     this.SaveToFile(file.FullName, contentMinified);
                 }
             }
@@ -355,6 +428,56 @@ namespace Bridge.Translator
             logger.Info("Done SaveTo path = " + path);
 
             return files;
+        }
+
+        public string GenerateSourceMap(string fileName, string content, Action<SourceMapBuilder> before = null)
+        {
+            if (this.AssemblyInfo.SourceMap.Enabled)
+            {
+                var projectPath = Path.GetDirectoryName(this.Location);
+
+                SourceMapGenerator.Generate(fileName, projectPath, ref content,
+                    before,
+                    (sourceRelativePath) =>
+                    {
+                        string path = null;
+                        ParsedSourceFile sourceFile = null;
+
+                        try
+                        {
+                            path = Path.Combine(projectPath, sourceRelativePath);
+                            sourceFile = this.ParsedSourceFiles.First(pf => pf.ParsedFile.FileName == path);
+
+                            return sourceFile.SyntaxTree.TextSource ?? sourceFile.SyntaxTree.ToString(Translator.GetFormatter());
+                        }
+                        catch (Exception ex)
+                        {
+                            throw (TranslatorException)TranslatorException.Create(
+                                "Could not get ParsedSourceFile for SourceMap. Exception: {0}; projectPath: {1}; sourceRelativePath: {2}; path: {3}.",
+                                ex.ToString(), projectPath, sourceRelativePath, path);
+                        }
+
+                    },
+                    new string[0], this.SourceFiles, this.AssemblyInfo.SourceMap.Eol, this.Log);
+            }
+            return content;
+        }
+
+        private static CSharpFormattingOptions GetFormatter()
+        {
+            var formatter = FormattingOptionsFactory.CreateSharpDevelop();
+            formatter.AnonymousMethodBraceStyle = BraceStyle.NextLine;
+            formatter.MethodBraceStyle = BraceStyle.NextLine;
+            formatter.StatementBraceStyle = BraceStyle.NextLine;
+            formatter.PropertyBraceStyle = BraceStyle.NextLine;
+            formatter.ConstructorBraceStyle = BraceStyle.NextLine;
+            formatter.NewLineAfterConstructorInitializerColon = NewLinePlacement.NewLine;
+            formatter.NewLineAferMethodCallOpenParentheses = NewLinePlacement.NewLine;
+            formatter.ClassBraceStyle = BraceStyle.NextLine;
+            formatter.ArrayInitializerBraceStyle = BraceStyle.NextLine;
+            formatter.IndentPreprocessorDirectives = false;
+
+            return formatter;
         }
 
         public void RunAfterBuild()
@@ -921,12 +1044,15 @@ namespace Bridge.Translator
 
             if (this.jsbuffer != null && this.jsbuffer.Length > 0)
             {
-                File.WriteAllText(filePath, this.jsbuffer.ToString(), OutputEncoding);
+                var code = this.GenerateSourceMap(filePath, this.jsbuffer.ToString());
+                File.WriteAllText(filePath, code, OutputEncoding);
             }
 
             if (this.jsminbuffer != null && this.jsminbuffer.Length > 0)
             {
-                File.WriteAllText(FileHelper.GetMinifiedJSFileName(filePath), this.jsminbuffer.ToString(), OutputEncoding);
+                var filePathMin = FileHelper.GetMinifiedJSFileName(filePath);
+                var code = this.GenerateSourceMap(filePathMin, this.jsminbuffer.ToString());
+                File.WriteAllText(filePathMin, code, OutputEncoding);
             }
 
             this.Log.Info("Done running Flush");

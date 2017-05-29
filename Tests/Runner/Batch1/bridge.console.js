@@ -1,7 +1,7 @@
 /**
- * @version   : 16.0.0-beta - Bridge.NET
+ * @version   : 16.0.0-beta2 - Bridge.NET
  * @author    : Object.NET, Inc. http://bridge.net/
- * @date      : 2017-01-16
+ * @date      : 2017-05-22
  * @copyright : Copyright 2008-2017 Object.NET, Inc. http://object.net/
  * @license   : See license.txt and https://github.com/bridgedotnet/Bridge/blob/master/LICENSE.md
  */
@@ -71,8 +71,10 @@ Bridge.assembly("Bridge", function ($asm, globals) {
                     }
 
                     if (con && con.error) {
-                        Bridge.global.console.error = function (msg) {
-                            error(msg);
+                        var err = con.error;
+
+                        con.error = function (msg) {
+                            err.apply(con, arguments);
                             Bridge.Console.error(msg);
                         }
                     }

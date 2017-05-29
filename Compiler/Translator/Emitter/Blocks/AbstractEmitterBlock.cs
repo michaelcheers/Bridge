@@ -41,13 +41,47 @@ namespace Bridge.Translator
             this.EndEmit();
         }
 
+        private int startPos;
+        private int checkPos;
         protected virtual void BeginEmit()
         {
+            if (this.NeedSequencePoint())
+            {
+                this.startPos = this.Emitter.Output.Length;
+                this.WriteSequencePoint(this.Emitter.Translator.EmitNode.Region);
+                this.checkPos = this.Emitter.Output.Length;
+            }
         }
 
         protected virtual void EndEmit()
         {
+            if (this.NeedSequencePoint() && this.checkPos == this.Emitter.Output.Length)
+            {
+                this.Emitter.Output.Length = this.startPos;
+            }
             this.Emitter.Translator.EmitNode = this.previousNode;
+        }
+
+        protected bool NeedSequencePoint()
+        {
+            if (this.Emitter.Translator.EmitNode != null && !this.Emitter.Translator.EmitNode.Region.IsEmpty)
+            {
+                if (this.Emitter.Translator.EmitNode is EntityDeclaration ||
+                    this.Emitter.Translator.EmitNode is BlockStatement ||
+                    this.Emitter.Translator.EmitNode is ArrayInitializerExpression ||
+                    this.Emitter.Translator.EmitNode is PrimitiveExpression ||
+                    this.Emitter.Translator.EmitNode is Comment)
+                {
+                    return false;
+                }
+
+                return true;
+            }
+
+            return false;
+
+            //return this.Emitter.Translator.EmitNode != null && !this.Emitter.Translator.EmitNode.Region.IsEmpty;
+            //return this.Emitter.Translator.EmitNode is Statement && !(this.Emitter.Translator.EmitNode is BlockStatement);
         }
 
         public virtual void EmitBlockOrIndentedLine(AstNode node)
@@ -99,7 +133,7 @@ namespace Bridge.Translator
 
         protected AstNode[] GetAwaiters(AstNode node)
         {
-            var awaitSearch = new AwaitSearchVisitor();
+            var awaitSearch = new AwaitSearchVisitor(this.Emitter);
             node.AcceptVisitor(awaitSearch);
 
             return awaitSearch.GetAwaitExpressions().ToArray();
@@ -119,6 +153,20 @@ namespace Bridge.Translator
 
         protected IAsyncStep WriteAwaiter(AstNode node)
         {
+            var index = System.Array.IndexOf(this.Emitter.AsyncBlock.AwaitExpressions, node) + 1;
+
+            if (node is ConditionalExpression)
+            {
+                new ConditionalBlock(this.Emitter, (ConditionalExpression)node).WriteAsyncConditionalExpression(index);
+                return null;
+            }
+
+            if (node is BinaryOperatorExpression)
+            {
+                new BinaryOperatorBlock(this.Emitter, (BinaryOperatorExpression)node).WriteAsyncBinaryExpression(index);
+                return null;
+            }
+
             if (this.Emitter.AsyncBlock.WrittenAwaitExpressions.Contains(node))
             {
                 return null;
@@ -126,7 +174,6 @@ namespace Bridge.Translator
 
             this.Emitter.AsyncBlock.WrittenAwaitExpressions.Add(node);
 
-            var index = System.Array.IndexOf(this.Emitter.AsyncBlock.AwaitExpressions, node) + 1;
             this.Write(JS.Vars.ASYNC_TASK + index + " = ");
             bool customAwaiter = false;
             var oldValue = this.Emitter.ReplaceAwaiterByVar;

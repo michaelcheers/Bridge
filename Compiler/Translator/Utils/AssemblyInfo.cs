@@ -19,6 +19,7 @@ namespace Bridge.Translator
             this.Resources = new ResourceConfig();
             this.Loader = new ModuleLoader();
             this.Output = DEFAULT_OUTPUT;
+            this.SourceMap = new SourceMapConfig();
         }
 
         /// <summary>
@@ -288,10 +289,16 @@ namespace Bridge.Translator
             get; set;
         }
 
-        public bool EnableNamedFunctionExpressions
+        public NamedFunctionMode NamedFunctions
         {
             get;
             set;
+        }
+
+        [Newtonsoft.Json.JsonConverter(typeof(SourceMapConfigConverter))]
+        public SourceMapConfig SourceMap
+        {
+            get; set;
         }
     }
 }

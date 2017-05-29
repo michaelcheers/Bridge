@@ -144,6 +144,88 @@ namespace Bridge.Translator
             this.Emitter.ReplaceJump = oldReplaceJump;
         }
 
+        internal static Statement GetOuterLoop(AstNode context)
+        {
+            Statement loop = null;
+            context.GetParent(node =>
+            {
+                bool stopSearch = false;
+
+                if (node is ForStatement ||
+                    node is ForeachStatement ||
+                    node is DoWhileStatement ||
+                    node is WhileStatement)
+                {
+                    loop = (Statement)node;
+                }
+                else if (node is EntityDeclaration ||
+                         node is LambdaExpression ||
+                         node is AnonymousMethodExpression)
+                {
+                    stopSearch = true;
+                }
+
+                return stopSearch;
+            });
+
+            return loop;
+        }
+
+        internal static IVariable[] GetCapturedLoopVariables(IEmitter emitter, AstNode context, IEnumerable<ParameterDeclaration> parameters, bool excludeReadOnly = false)
+        {
+            var loop = LambdaBlock.GetOuterLoop(context);
+            if (loop == null)
+            {
+                return null;
+            }
+
+            var loopVariablesAnalyzer = new LoopVariablesAnalyzer(emitter, excludeReadOnly);
+            loopVariablesAnalyzer.Analyze(loop);
+
+            var captureAnalyzer = new CaptureAnalyzer(emitter);
+            captureAnalyzer.Analyze(context, parameters.Select(p => p.Name));
+            return captureAnalyzer.UsedVariables.Where(v => loopVariablesAnalyzer.Variables.Contains(v)).ToArray();
+        }
+
+        private string[] GetCapturedLoopVariablesNames()
+        {
+            var capturedVariables = LambdaBlock.GetCapturedLoopVariables(this.Emitter, this.Context, this.Parameters);
+
+            if (capturedVariables == null)
+            {
+                return null;
+            }
+
+            List<string> names = new List<string>();
+            foreach (var capturedVariable in capturedVariables)
+            {
+                if (this.Emitter.LocalsMap != null && this.Emitter.LocalsMap.ContainsKey(capturedVariable))
+                {
+                    names.Add(this.RemoveReferencePart(this.Emitter.LocalsMap[capturedVariable]));
+                }
+                else if (this.Emitter.LocalsNamesMap != null && this.Emitter.LocalsNamesMap.ContainsKey(capturedVariable.Name))
+                {
+                    names.Add(this.RemoveReferencePart(this.Emitter.LocalsNamesMap[capturedVariable.Name]));
+                }
+                else
+                {
+                    names.Add(capturedVariable.Name);
+                }
+            }
+
+            return names.ToArray();
+        }
+
+        private string RemoveReferencePart(string name)
+        {
+            if (name.EndsWith(".v"))
+            {
+                name = name.Remove(name.Length - 2);
+            }
+
+            return name;
+        }
+
         protected virtual void EmitLambda(IEnumerable<ParameterDeclaration> parameters, AstNode body, AstNode context)
         {
             var rr = this.Emitter.Resolver.ResolveNode(context, this.Emitter);
@@ -183,8 +265,18 @@ namespace Bridge.Translator
             bool block = body is BlockStatement;
             this.Write("");
 
-            var savedPos = this.Emitter.Output.Length;
             var savedThisCount = this.Emitter.ThisRefCounter;
+            var capturedVariables = this.GetCapturedLoopVariablesNames();
+            var hasCapturedVariables = capturedVariables != null && capturedVariables.Length > 0;
+            if (hasCapturedVariables)
+            {
+                this.Write("(function ($me, ");
+                this.Write(string.Join(", ", capturedVariables) + ") ");
+                this.BeginBlock();
+                this.Write("return ");
+            }
+
+            var savedPos = this.Emitter.Output.Length;
 
             this.WriteFunction();
             this.EmitMethodParameters(parameters, null, context);
@@ -241,7 +333,17 @@ namespace Bridge.Translator
                 {
                     var name = "f" + (this.Emitter.NamedFunctions.Count + 1);
                     var code = this.Emitter.Output.ToString().Substring(savedPos);
-                    var pair = this.Emitter.NamedFunctions.FirstOrDefault(p => p.Value == code);
+                    var codeForComare = this.RemoveTokens(code);
+
+                    var pair = this.Emitter.NamedFunctions.FirstOrDefault(p =>
+                    {
+                        if (this.Emitter.AssemblyInfo.SourceMap.Enabled)
+                        {
+                            return this.RemoveTokens(p.Value) == codeForComare;
+                        }
+
+                        return p.Value == code;
+                    });
 
                     if (pair.Key != null && pair.Value != null)
                     {
@@ -255,7 +357,7 @@ namespace Bridge.Translator
                     this.Emitter.Output.Remove(savedPos, this.Emitter.Output.Length - savedPos);
                     this.Emitter.Output.Insert(savedPos, JS.Vars.D_ + "." + BridgeTypes.ToJsName(this.Emitter.TypeInfo.Type, this.Emitter, true) + "." + name);
                 }
-                
+
                 this.Emitter.ResetLevel(oldLevel);
             }
 
@@ -263,11 +365,26 @@ namespace Bridge.Translator
 
 
             var methodDeclaration = this.Body.GetParent<MethodDeclaration>();
+            var thisCaptured = this.Emitter.ThisRefCounter > savedThisCount ||
+                               this.IsAsync && methodDeclaration != null &&
+                               !methodDeclaration.HasModifier(Modifiers.Static);
 
-            if (this.Emitter.ThisRefCounter > savedThisCount || this.IsAsync && methodDeclaration != null && !methodDeclaration.HasModifier(Modifiers.Static))
+            if (thisCaptured)
             {
-                this.Emitter.Output.Insert(savedPos, JS.Funcs.BRIDGE_BIND + "(this, ");
+                this.Emitter.Output.Insert(savedPos, JS.Funcs.BRIDGE_BIND + (hasCapturedVariables ? "($me, " : "(this, "));
                 this.WriteCloseParentheses();
+            }
+
+            if (hasCapturedVariables)
+            {
+                this.WriteSemiColon(true);
+                this.EndBlock();
+                this.Write(")(");
+
+                this.Write("this, ");
+
+                this.Write(string.Join(", ", capturedVariables));
+                this.Write(")");
             }
 
             this.PopLocals();

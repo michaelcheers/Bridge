@@ -183,10 +183,15 @@ namespace Bridge.Contract
             get; set;
         }
 
-        bool EnableNamedFunctionExpressions
+        NamedFunctionMode NamedFunctions
         {
             get;
             set;
+        }
+
+        SourceMapConfig SourceMap
+        {
+            get; set;
         }
     }
  }
