@@ -21,6 +21,7 @@ namespace Bridge.Translator
             this.FieldsOnly = fieldsOnly;
             this.Injectors = new List<string>();
             this.IsObjectLiteral = isObjectLiteral;
+            this.ClearTempVariables = true;
         }
 
         public bool IsObjectLiteral
@@ -65,13 +66,28 @@ namespace Bridge.Translator
             private set;
         }
 
+        public bool ClearTempVariables
+        {
+            get; set;
+        }
+
         protected override void DoEmit()
         {
-            if (this.Emitter.TempVariables != null)
+            if (this.Emitter.TempVariables != null && this.ClearTempVariables)
             {
                 this.Emitter.TempVariables = new Dictionary<string, bool>();
             }
             this.EmitFields(this.StaticBlock ? this.TypeInfo.StaticConfig : this.TypeInfo.InstanceConfig);
+
+            /*if (this.Injectors.Count > 0 && this.Emitter.TempVariables != null && this.Emitter.TempVariables.Count > 0)
+            {
+                var writer = this.SaveWriter();
+                this.NewWriter();
+                this.SimpleEmitTempVars(false);
+                this.Injectors.Insert(0, this.Emitter.Output.ToString());
+                this.Emitter.TempVariables.Clear();
+                this.RestoreWriter(writer);
+            }*/
         }
 
         protected virtual void EmitFields(TypeConfigInfo info)
