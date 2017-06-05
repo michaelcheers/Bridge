@@ -393,10 +393,10 @@ namespace Bridge.Translator
                         else
                         {
                             var rr = this.Emitter.Resolver.ResolveNode(member.Initializer, this.Emitter) as CSharpInvocationResolveResult;
-                            bool isDefaultInstance = rr != null && 
+                            bool isDefaultInstance = rr != null &&
                                                      rr.Member.SymbolKind == SymbolKind.Constructor &&
-                                                     rr.Arguments.Count == 0 && 
-                                                     rr.InitializerStatements.Count == 0 && 
+                                                     rr.Arguments.Count == 0 &&
+                                                     rr.InitializerStatements.Count == 0 &&
                                                      rr.Type.Kind == TypeKind.Struct;
 
                             if (!isDefaultInstance)
@@ -430,7 +430,7 @@ namespace Bridge.Translator
                         withoutTypeParams = OverloadsCollection.ExcludeTypeParameterForDefinition(m_rr);
                     }
                 }
-                
+
                 var mname = member.GetName(this.Emitter, withoutTypeParams);
 
                 if (this.TypeInfo.IsEnum && m_rr != null)
@@ -488,7 +488,7 @@ namespace Bridge.Translator
                     {
                         var name = member.GetName(this.Emitter);
                         bool isValidIdentifier = Helpers.IsValidIdentifier(name);
-                        var value = constValue is AstType ? Inspector.GetStructDefaultValue((AstType) constValue, this.Emitter) : Inspector.GetStructDefaultValue((IType)constValue, this.Emitter);
+                        var value = constValue is AstType ? Inspector.GetStructDefaultValue((AstType)constValue, this.Emitter) : Inspector.GetStructDefaultValue((IType)constValue, this.Emitter);
 
                         if (!isValidIdentifier)
                         {
@@ -840,7 +840,7 @@ namespace Bridge.Translator
                 if (pair)
                 {
                     this.WriteComma();
-                    this.WriteScript(OverloadsCollection.Create(Emitter, interfaceMember).GetOverloadName(withoutTypeParams:true));
+                    this.WriteScript(OverloadsCollection.Create(Emitter, interfaceMember).GetOverloadName(withoutTypeParams: true));
                     this.WriteCloseBracket();
                 }
             }

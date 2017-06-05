@@ -22276,7 +22276,6 @@ Bridge.$N1391Result =                     r;
             },
             ctor: function () {
                 this.$initialize();
-                // nothing
             }
         }
     });

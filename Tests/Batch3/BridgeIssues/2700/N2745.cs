@@ -11,7 +11,10 @@ namespace Bridge.ClientTest.Batch3.BridgeIssues
         public class Asd
         {
             public string Test1;
-            public string Test2 { get; protected set; }
+            public string Test2
+            {
+                get; protected set;
+            }
 
             public Asd(string forTest2)
             {
@@ -20,14 +23,16 @@ namespace Bridge.ClientTest.Batch3.BridgeIssues
 
             public Asd()
             {
-                // nothing
             }
         }
 
         public class Hoho
         {
             public Asd AsdInstance = new Asd("haha") { Test1 = "hoho" };
-            public Asd Property { get; set; }
+            public Asd Property
+            {
+                get; set;
+            }
         }
 
         [Test]
