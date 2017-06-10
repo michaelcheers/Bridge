@@ -391,7 +391,7 @@ namespace Bridge.Html5.TypedArray
             return;
         }
 
-        public void Set(TypedArray typedArray)
+        public void Set(Union<Uint8Array, Uint8ClampedArray, Int8Array, Uint16Array, Int16Array, Uint32Array, Int32Array> typedArray)
         {
             return;
         }
@@ -409,7 +409,7 @@ namespace Bridge.Html5.TypedArray
         /// If you omit this value, 0 is assumed (that is, the source array will overwrite values in
         /// the target array starting at index 0).
         /// </param>
-        public void Set(TypedArray typedArray, Union<int, uint> offset)
+        public void Set(Union<Uint8Array, Uint8ClampedArray, Int8Array, Uint16Array, Int16Array, Uint32Array, Int32Array> typedArray, Union<int, uint> offset)
         {
             return;
         }
