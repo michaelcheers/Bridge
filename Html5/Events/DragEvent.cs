@@ -32,6 +32,7 @@
     /// <typeparam name="TCurrentTarget">The CurrentTarget type.</typeparam>
     [External]
     [Name("DragEvent")]
+    [IgnoreGeneric]
     public class DragEvent<TCurrentTarget> : DragEvent where TCurrentTarget : HTMLElement
     {
         /// <summary>
