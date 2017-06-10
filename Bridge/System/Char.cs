@@ -24,6 +24,9 @@ namespace System
         [Template("System.Char.charCodeAt({s}, 0)")]
         public static extern char Parse(string s);
 
+        [Template("System.Char.tryParse({s}, {result})")]
+        public static extern bool TryParse(string s, out char result);
+
         [Template("String.fromCharCode({this})")]
         public override extern string ToString();
 
