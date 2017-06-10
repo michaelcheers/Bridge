@@ -191,10 +191,6 @@
         return new System.Decimal(this.value.minus(System.Decimal.getValue(1)));
     };
 
-    System.Decimal.prototype.sign = function () {
-        return this.value.isZero() ? 0 : (this.value.isNegative() ? -1 : 1);
-    };
-
     System.Decimal.prototype.clone = function () {
         return new System.Decimal(this);
     };
@@ -232,7 +228,7 @@
     };
 
     System.Decimal.prototype.getHashCode = function () {
-        var n = (this.sign() * 397 + this.value.e) | 0;
+        var n = (this.compareTo(System.Decimal.Zero) * 397 + this.value.e) | 0;
 
         for (var i = 0; i < this.value.d.length; i++) {
             n = (n * 397 + this.value.d[i]) | 0;

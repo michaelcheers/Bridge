@@ -824,10 +824,6 @@
 
             clipu64: function (x) {
                 return Bridge.isNumber(x) ? System.UInt64(Bridge.Int.trunc(x)) : (Bridge.Int.isInfinite(x) ? System.UInt64.MinValue : null);
-            },
-
-            sign: function (x) {
-                return Bridge.isNumber(x) ? (x === 0 ? 0 : (x < 0 ? -1 : 1)) : null;
             }
         }
     });

@@ -6616,10 +6616,6 @@ Bridge.Class.addExtend(System.Boolean, [System.IComparable$1(System.Boolean), Sy
 
             clipu64: function (x) {
                 return Bridge.isNumber(x) ? System.UInt64(Bridge.Int.trunc(x)) : (Bridge.Int.isInfinite(x) ? System.UInt64.MinValue : null);
-            },
-
-            sign: function (x) {
-                return Bridge.isNumber(x) ? (x === 0 ? 0 : (x < 0 ? -1 : 1)) : null;
             }
         }
     });
@@ -6984,9 +6980,9 @@ Bridge.Class.addExtend(System.Boolean, [System.IComparable$1(System.Boolean), Sy
             r = new this.T(this.value.mul(arg));
 
         if (overflow) {
-            var s1 = this.sign(),
+            var s1 = this.compareTo(System.Int64(0)),
                 s2 = arg.isZero() ? 0 : (arg.isNegative() ? -1 : 1),
-                rs = r.sign();
+                rs = r.compareTo(System.Int64(0));
 
             if (this.T === System.Int64) {
                 if (this.eq(System.Int64.MinValue) || this.eq(System.Int64.MaxValue)) {
@@ -7068,10 +7064,6 @@ Bridge.Class.addExtend(System.Boolean, [System.IComparable$1(System.Boolean), Sy
         return this.sub(1, overflow);
     };
 
-    System.Int64.prototype.sign = function () {
-        return this.value.isZero() ? 0 : (this.value.isNegative() ? -1 : 1);
-    };
-
     System.Int64.prototype.clone = function () {
         return new this.T(this);
     };
@@ -7113,7 +7105,7 @@ Bridge.Class.addExtend(System.Boolean, [System.IComparable$1(System.Boolean), Sy
     };
 
     System.Int64.prototype.getHashCode = function () {
-        var n = (this.sign() * 397 + this.value.high) | 0;
+        var n = (this.compareTo(System.Int64(0)) * 397 + this.value.high) | 0;
         n = (n * 397 + this.value.low) | 0;
 
         return n;
@@ -7429,7 +7421,6 @@ Bridge.Class.addExtend(System.Boolean, [System.IComparable$1(System.Boolean), Sy
     System.UInt64.prototype.neg = System.Int64.prototype.neg;
     System.UInt64.prototype.inc = System.Int64.prototype.inc;
     System.UInt64.prototype.dec = System.Int64.prototype.dec;
-    System.UInt64.prototype.sign = System.Int64.prototype.sign;
     System.UInt64.prototype.clone = System.Int64.prototype.clone;
     System.UInt64.prototype.ne = System.Int64.prototype.ne;
     System.UInt64.prototype.neq = System.Int64.prototype.neq;
@@ -7745,10 +7736,6 @@ Bridge.Class.addExtend(System.Boolean, [System.IComparable$1(System.Boolean), Sy
         return new System.Decimal(this.value.minus(System.Decimal.getValue(1)));
     };
 
-    System.Decimal.prototype.sign = function () {
-        return this.value.isZero() ? 0 : (this.value.isNegative() ? -1 : 1);
-    };
-
     System.Decimal.prototype.clone = function () {
         return new System.Decimal(this);
     };
@@ -7786,7 +7773,7 @@ Bridge.Class.addExtend(System.Boolean, [System.IComparable$1(System.Boolean), Sy
     };
 
     System.Decimal.prototype.getHashCode = function () {
-        var n = (this.sign() * 397 + this.value.e) | 0;
+        var n = (this.compareTo(System.Decimal.Zero) * 397 + this.value.e) | 0;
 
         for (var i = 0; i < this.value.d.length; i++) {
             n = (n * 397 + this.value.d[i]) | 0;

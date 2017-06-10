@@ -290,11 +290,23 @@ namespace System
         [Template("{d}.trunc()")]
         public static extern decimal Truncate(decimal d);
 
-        [Template("Bridge.Int.sign({value})")]
+        [Template("Bridge.compare({0}, 0)")]
         public static extern int Sign(double value);
 
-        [Template("{value}.sign()")]
+        [Template("Bridge.compare({0}, 0)")]
+        public static extern int Sign(int value);
+
+        [Template("Bridge.compare({0}, 0)")]
+        public static extern int Sign(short value);
+
+        [Template("Bridge.compare({0}, 0)")]
+        public static extern int Sign(sbyte value);
+
+        [Template("{0}.compareTo(System.Decimal.Zero)")]
         public static extern int Sign(decimal value);
+
+        [Template("{0}.compareTo(System.Int64(0))")]
+        public static extern int Sign(long value);
 
         [Template("Bridge.Math.divRem({a}, {b}, {result})")]
         public static extern int DivRem(int a, int b, out int result);
