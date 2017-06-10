@@ -264,31 +264,31 @@ namespace System
         [Template("{d1}.equals({d2})")]
         public static extern bool Equals(decimal d1, decimal d2);
 
-        [Template("System.Decimal.toInt({value})")]
+        [Template("System.Decimal.toInt({value}, System.Byte)")]
         public static extern byte ToByte(decimal value);
 
-        [Template("System.Decimal.toInt({value})")]
+        [Template("System.Decimal.toInt({value}, System.SByte)")]
         public static extern sbyte ToSByte(decimal value);
 
         [Template("System.Decimal.toInt({value})")]
         public static extern char ToChar(decimal value);
 
-        [Template("System.Decimal.toInt({value})")]
+        [Template("System.Decimal.toInt({value}, System.Int16)")]
         public static extern short ToInt16(decimal value);
 
-        [Template("System.Decimal.toInt({value})")]
+        [Template("System.Decimal.toInt({value}, System.UInt16)")]
         public static extern ushort ToUInt16(decimal value);
 
-        [Template("System.Decimal.toInt({value})")]
+        [Template("System.Decimal.toInt({value}, System.Int32)")]
         public static extern int ToInt32(decimal value);
 
-        [Template("System.Decimal.toInt({value})")]
+        [Template("System.Decimal.toInt({value}, System.UInt32)")]
         public static extern uint ToUInt32(decimal value);
 
-        [Template("System.Decimal.toInt({value})")]
+        [Template("System.Decimal.toInt({value}, System.Int64)")]
         public static extern long ToInt64(decimal value);
 
-        [Template("System.Decimal.toInt({value})")]
+        [Template("System.Decimal.toInt({value}, System.UInt64)")]
         public static extern ulong ToUInt64(decimal value);
 
         [Template("System.Decimal.toFloat({value})")]
