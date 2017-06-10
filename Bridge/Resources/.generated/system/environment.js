@@ -63,8 +63,8 @@
                         var s = err.stack;
 
                         if (!System.String.isNullOrEmpty(s)) {
-                            if (System.String.indexOf(s, "at") >= 0) {
-                                return s.substr(System.String.indexOf(s, "at"));
+                            if (s.indexOf("at") >= 0) {
+                                return s.substr(s.indexOf("at"));
                             }
                         }
 
