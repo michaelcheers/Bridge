@@ -176,6 +176,7 @@
                 }
                 this._version = (this._version + 1) | 0;
             },
+            arrayClear: function (array, index, length) { },
             contains: function (item) {
                 if (this._buckets != null) {
                     var hashCode = this.internalGetHashCode(item);

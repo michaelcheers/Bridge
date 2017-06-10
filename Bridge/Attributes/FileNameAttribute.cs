@@ -22,9 +22,7 @@ namespace Bridge
     [NonScriptable]
     public sealed class OutputAttribute : Attribute
     {
-        public OutputAttribute(string path)
-        {
-        }
+        public extern OutputAttribute(string path);
     }
 
     /// <summary>
@@ -36,13 +34,8 @@ namespace Bridge
     [NonScriptable]
     public sealed class OutputByAttribute : Attribute
     {
-        public OutputByAttribute(OutputBy outputBy)
-        {
-        }
-
-        public OutputByAttribute(OutputBy outputBy, int startIndexInName)
-        {
-        }
+        public extern OutputByAttribute(OutputBy outputBy);
+        public extern OutputByAttribute(OutputBy outputBy, int startIndexInName);
     }
 
     /// <summary>
