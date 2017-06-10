@@ -4,45 +4,21 @@ namespace Bridge.Html5
     [Name("Object")]
     public class BlobDataObject
     {
-        public static implicit operator BlobDataObject(ArrayBuffer t)
-        {
-            return null;
-        }
+        public static extern implicit operator BlobDataObject(ArrayBuffer t);
 
-        public static implicit operator BlobDataObject(ArrayBufferView t)
-        {
-            return null;
-        }
+        public static extern implicit operator BlobDataObject(ArrayBufferView t);
 
-        public static implicit operator BlobDataObject(Blob t)
-        {
-            return null;
-        }
+        public static extern implicit operator BlobDataObject(Blob t);
 
-        public static implicit operator BlobDataObject(string t)
-        {
-            return null;
-        }
+        public static extern implicit operator BlobDataObject(string t);
 
-        public static explicit operator ArrayBuffer(BlobDataObject value)
-        {
-            return default(ArrayBuffer);
-        }
+        public static extern explicit operator ArrayBuffer(BlobDataObject value);
 
-        public static explicit operator ArrayBufferView(BlobDataObject value)
-        {
-            return default(ArrayBufferView);
-        }
+        public static extern explicit operator ArrayBufferView(BlobDataObject value);
 
-        public static explicit operator Blob(BlobDataObject value)
-        {
-            return default(Blob);
-        }
+        public static extern explicit operator Blob(BlobDataObject value);
 
-        public static explicit operator string (BlobDataObject value)
-        {
-            return default(string);
-        }
+        public static extern explicit operator string (BlobDataObject value);
     }
 
     /// <summary>

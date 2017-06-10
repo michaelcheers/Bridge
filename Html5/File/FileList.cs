@@ -25,10 +25,7 @@ namespace Bridge.Html5
         /// <param name="index">The zero-based index of the file to retrieve from the list.</param>
         /// <returns>The File representing the requested file.</returns>
         [Name("Item")]
-        public virtual File GetItem(int index)
-        {
-            return default(File);
-        }
+        public extern virtual File GetItem(int index);
 
         /// <summary>
         /// A read-only value indicating the number of files in the list.
