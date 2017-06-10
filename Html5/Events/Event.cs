@@ -10,17 +10,11 @@ namespace Bridge.Html5
     [Namespace(false)]
     public class Event
     {
-        internal Event()
-        {
-        }
+        extern internal Event();
 
-        public Event(string type)
-        {
-        }
+        public extern Event(string type);
 
-        public Event(string type, EventInit eventInit)
-        {
-        }
+        public extern Event(string type, EventInit eventInit);
 
         /// <summary>
         /// Indicates whether the given event bubbles up through the DOM or not.

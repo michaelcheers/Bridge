@@ -7,9 +7,7 @@ namespace Bridge.Html5
     [Name("WheelEvent")]
     public class WheelEvent : Event
     {
-        internal WheelEvent()
-        {
-        }
+        extern internal WheelEvent();
 
         /// <summary>
         /// Horizontal scroll amount. Read only.

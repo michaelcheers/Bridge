@@ -7,9 +7,7 @@ namespace Bridge.Html5
     [Name("Node")]
     public class Node : EventTarget
     {
-        protected internal Node()
-        {
-        }
+        protected extern internal Node();
 
         /// <summary>
         /// Returns a DOMString representing the base URL. The concept of base URL changes from one language to another; in HTML, it corresponds to the protocol, the domain name and the directory structure, that is all until the last '/'.

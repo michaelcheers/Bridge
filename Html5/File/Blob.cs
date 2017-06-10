@@ -56,26 +56,20 @@ namespace Bridge.Html5
         /// <summary>
         ///
         /// </summary>
-        public Blob()
-        {
-        }
+        public extern Blob();
 
         /// <summary>
         ///
         /// </summary>
         /// <param name="parts">An Array of data objects to put into the new Blob object. This can be any number of ArrayBuffer, ArrayBufferView (typed array), Blob, or strings, in any order.</param>
-        public Blob(BlobDataObject[] parts)
-        {
-        }
+        public extern Blob(BlobDataObject[] parts);
 
         /// <summary>
         ///
         /// </summary>
         /// <param name="parts">An Array of data objects to put into the new Blob object. This can be any number of ArrayBuffer, ArrayBufferView (typed array), Blob, or strings, in any order.</param>
         /// <param name="properties">A BlobPropertyBag object that provides the properties for the new Blob object.</param>
-        public Blob(BlobDataObject[] parts, BlobPropertyBag properties)
-        {
-        }
+        public extern Blob(BlobDataObject[] parts, BlobPropertyBag properties);
 
         /// <summary>
         /// The size, in bytes, of the data contained in the Blob object.

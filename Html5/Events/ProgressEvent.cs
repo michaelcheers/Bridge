@@ -7,9 +7,7 @@ namespace Bridge.Html5
     [Name("ProgressEvent")]
     public class ProgressEvent : Event
     {
-        internal ProgressEvent()
-        {
-        }
+        extern internal ProgressEvent();
 
         /// <summary>
         /// Is a Boolean flag indicating if the total work to be done, and the amount of work already done, by the underlying process is calculable. In other words, it tells if the progress is measurable or not.

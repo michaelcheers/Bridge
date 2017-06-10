@@ -7,9 +7,7 @@ namespace Bridge.Html5
     [Name("HashChangeEvent")]
     public class HashChangeEvent : Event
     {
-        internal HashChangeEvent()
-        {
-        }
+        extern internal HashChangeEvent();
 
         /// <summary>
         /// The new URL to which the window is navigating.

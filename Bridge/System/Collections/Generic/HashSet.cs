@@ -92,9 +92,7 @@ namespace System.Collections.Generic
             _version++;
         }
 
-        public void ArrayClear(Array array, int index, int length)
-        {
-        }
+        public extern void ArrayClear(Array array, int index, int length);
 
         public bool Contains(T item)
         {

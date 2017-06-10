@@ -10,9 +10,7 @@ namespace Bridge
     [NonScriptable]
     public sealed class FileNameAttribute : Attribute
     {
-        public FileNameAttribute(string filename)
-        {
-        }
+        public extern FileNameAttribute(string filename);
     }
 
     /// <summary>

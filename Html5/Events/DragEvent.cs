@@ -4,17 +4,11 @@
     [Name("DragEvent")]
     public class DragEvent : MouseEvent
     {
-        internal DragEvent()
-        {
-        }
+        extern internal DragEvent();
 
-        public DragEvent(string type)
-        {
-        }
+        public extern DragEvent(string type);
 
-        public DragEvent(string type, DragEventInit eventInit)
-        {
-        }
+        public extern DragEvent(string type, DragEventInit eventInit);
 
         /// <summary>
         /// The data that is transferred during a drag and drop interaction.

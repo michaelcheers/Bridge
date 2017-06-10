@@ -7,13 +7,9 @@ namespace Bridge.Html5
     [Name("CustomEvent")]
     public class CustomEvent : Event
     {
-        internal CustomEvent()
-        {
-        }
+        extern internal CustomEvent();
 
-        public CustomEvent(string type, CustomEventInit eventInitDict)
-        {
-        }
+        public extern CustomEvent(string type, CustomEventInit eventInitDict);
 
         /// <summary>
         /// The data passed when initializing the event.

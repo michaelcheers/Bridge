@@ -7,9 +7,7 @@ namespace Bridge.Html5
     [Name("AnimationEvent")]
     public class AnimationEvent : Event
     {
-        internal AnimationEvent()
-        {
-        }
+        extern internal AnimationEvent();
 
         /// <summary>
         /// Is a DOMString containing the value of the animation-name CSS property associated with the transition.
