@@ -328,7 +328,6 @@ namespace System
         /// </summary>
         /// <param name="value">The string to seek.</param>
         /// <returns>The zero-based index position of value if that string is found, or -1 if it is not. If value is String.Empty, the return value is 0.</returns>
-        [Template("System.String.indexOf({this}, {value})")]
         public extern int IndexOf(string value);
 
         /// <summary>
@@ -354,12 +353,12 @@ namespace System
         /// The indexOf() method returns the index within the calling String object of the first occurrence of the specified value. The search starts at a specified character position and
         /// examines a specified number of character positions. Returns -1 if the value is not found.
         /// </summary>
-        /// <param name="searchValue">A string representing the value to search for.</param>
-        /// <param name="fromIndex">The location within the calling string to start the search from.</param>
+        /// <param name="value">A string representing the value to search for.</param>
+        /// <param name="startIndex">The location within the calling string to start the search from.</param>
         /// <param name="count">The number of character positions to examine.</param>
         /// <returns></returns>
-        [Template("System.String.indexOf({this}, {searchValue}, {fromIndex}, {count})")]
-        public extern int IndexOf(string searchValue, int fromIndex, int count);
+        [Template("System.String.indexOf({this}, {value}, {startIndex}, {count})")]
+        public extern int IndexOf(string value, int startIndex, int count);
 
         /// <summary>
         /// Reports the zero-based index of the first occurrence of the specified string in the current String object. A parameter specifies the type of search to use for the specified string.
@@ -442,6 +441,15 @@ namespace System
         /// <returns>The zero-based starting index position of value if that string is found, or -1 if it is not found or if the current instance equals String.Empty. If value is Empty, the return value is the smaller of startIndex and the last index position in this instance.</returns>
         [Template("System.String.lastIndexOf({this}, {value}, {startIndex}, {count})")]
         public extern int LastIndexOf(string value, int startIndex, int count);
+
+        [Template("System.String.lastIndexOf({this}, {value}, {startIndex}, {count}, {stringComparision})")]
+        public extern int LastIndexOf(string value, int startIndex, int count, StringComparison stringComparison);
+
+        [Template("System.String.lastIndexOf({this}, {value}, {startIndex}, {value}.length, {stringComparision})")]
+        public extern int LastIndexOf(string value, int startIndex, StringComparison stringComparison);
+
+        [Template("System.String.lastIndexOf({this}, {value}, 0, {value}.length, {stringComparision})")]
+        public extern int LastIndexOf(string value, StringComparison stringComparison);
 
         // TODO: Missing System.String.LastIndexOf Method overloads #2396
 

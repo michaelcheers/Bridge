@@ -5,11 +5,48 @@ Bridge.define("System.String", {
         $is: function (instance) {
             return typeof (instance) === "string";
         },
+        lastIndexOf: function (str, value) {
+            if (value == null) {
+                throw new System.ArgumentNullException();
+            }
 
-        lastIndexOf: function (s, search, startIndex, count) {
-            var index = s.lastIndexOf(search, startIndex);
+            if (str == null || str === "") {
+                return -1;
+            }
 
-            return (index < (startIndex - count + 1)) ? -1 : index;
+            var startIndex = (arguments.length > 2) ? arguments[2] : 0;
+
+            if (startIndex < 0 || startIndex > str.length) {
+                throw new System.ArgumentOutOfRangeException("startIndex", "startIndex cannot be less than zero and must refer to a location within the string");
+            }
+
+            if (value === "") {
+                return (arguments.length > 2) ? startIndex : 0;
+            }
+
+            var length = (arguments.length > 3) ? arguments[3] : str.length - startIndex;
+
+            if (length < 0) {
+                throw new System.ArgumentOutOfRangeException("length", "must be non-negative");
+            }
+
+            if (length > str.length - startIndex) {
+                throw new System.ArgumentOutOfRangeException("Index and length must refer to a location within the string");
+            }
+
+            var s = str.substr(startIndex, length),
+                index = (arguments.length === 5 && arguments[4] % 2 !== 0) ? s.toLocaleUpperCase().lastIndexOf(value.toLocaleUpperCase()) : s.lastIndexOf(value);
+
+            if (index > -1) {
+                if (arguments.length === 5) {
+                    // StringComparison
+                    return (System.String.compare(value, s.substr(index, value.length), arguments[4]) === 0) ? index + startIndex : -1;
+                } else {
+                    return index + startIndex;
+                }
+            }
+
+            return -1;
         },
 
         lastIndexOfAny: function (s, chars, startIndex, count) {
