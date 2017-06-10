@@ -6,22 +6,14 @@ Bridge.define("System.String", {
             return typeof (instance) === "string";
         },
         lastIndexOf: function (str, value) {
-            if (value == null) {
+            if (value == null || str == null) {
                 throw new System.ArgumentNullException();
-            }
-
-            if (str == null || str === "") {
-                return -1;
             }
 
             var startIndex = (arguments.length > 2) ? arguments[2] : 0;
 
             if (startIndex < 0 || startIndex > str.length) {
                 throw new System.ArgumentOutOfRangeException("startIndex", "startIndex cannot be less than zero and must refer to a location within the string");
-            }
-
-            if (value === "") {
-                return (arguments.length > 2) ? startIndex : 0;
             }
 
             var length = (arguments.length > 3) ? arguments[3] : str.length - startIndex;
@@ -300,22 +292,14 @@ Bridge.define("System.String", {
         },
 
         indexOf: function (str, value) {
-            if (value == null) {
+            if (value == null || str == null) {
                 throw new System.ArgumentNullException();
-            }
-
-            if (str == null || str === "") {
-                return -1;
             }
 
             var startIndex = (arguments.length > 2) ? arguments[2] : 0;
 
             if (startIndex < 0 || startIndex > str.length) {
                 throw new System.ArgumentOutOfRangeException("startIndex", "startIndex cannot be less than zero and must refer to a location within the string");
-            }
-
-            if (value === "") {
-                return (arguments.length > 2) ? startIndex : 0;
             }
 
             var length = (arguments.length > 3) ? arguments[3] : str.length - startIndex;
