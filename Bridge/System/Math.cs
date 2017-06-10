@@ -322,5 +322,8 @@ namespace System
 
         [Template("Bridge.Math.tanh({value})")]
         public static extern double Tanh(double value);
+
+        [Template("System.Int64({0}).mul(System.Int64({1}))")]
+        public static extern long BigMul(int a, int b);
     }
 }
