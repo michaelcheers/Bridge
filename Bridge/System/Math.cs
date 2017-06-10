@@ -12,15 +12,21 @@ namespace System
         [Convention]
         public const double PI = 3.14159265358979323846;
 
-        public static extern int Abs(int x);
+        public static extern int Abs(int value);
 
-        public static extern double Abs(double x);
+        public static extern float Abs(float value);
 
-        [Template("{l}.abs()")]
-        public static extern long Abs(long l);
+        public static extern double Abs(double value);
 
-        [Template("{l}.abs()")]
-        public static extern decimal Abs(decimal l);
+        [Template("{0}.abs()")]
+        public static extern long Abs(long value);
+
+        [Template("{0}.abs()")]
+        public static extern decimal Abs(decimal value);
+
+        public static extern short Abs(short value);
+        
+        public static extern sbyte Abs(sbyte value);
 
         /// <summary>
         /// Returns the larger of two 8-bit unsigned integers.
