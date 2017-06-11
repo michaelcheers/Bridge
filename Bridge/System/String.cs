@@ -577,6 +577,20 @@ namespace System
         public extern string ToUpper();
 
         /// <summary>
+        /// Returns a copy of this string converted to lowercase.
+        /// </summary>
+        /// <returns>A string in lowercase.</returns>
+        [Template("{this}.toLowerCase()")]
+        public extern string ToLowerInvariant();
+
+        /// <summary>
+        /// Returns a copy of this string converted to uppercase.
+        /// </summary>
+        /// <returns>The uppercase equivalent of the current string.</returns>
+        [Template("{this}.toUpperCase()")]
+        public extern string ToUpperInvariant();
+
+        /// <summary>
         /// Removes all leading and trailing white-space characters from the current String object.
         /// </summary>
         /// <returns>The string that remains after all white-space characters are removed from the start and end of the current string. If no characters can be trimmed from the current instance, the method returns the current instance unchanged.</returns>
