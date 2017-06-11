@@ -268,6 +268,12 @@ namespace System
         [Template("System.String.compare({strA}, {strB}, {comparisonType})")]
         public static extern int Compare(string strA, string strB, StringComparison comparisonType);
 
+        [Template("System.String.compare({0}, {1}, 4)")]
+        public static extern int CompareOrdinal(string strA, string strB);
+
+        [Template("System.String.compare({strA}.substr({indexA}, {length}), {strB}.substr({indexB}, {length}), 4)")]
+        public static extern int CompareOrdinal(string strA, int indexA, string strB, int indexB, int length);
+
         /// <summary>
         /// Compares two specified String objects, ignoring or honoring their case, and using culture-specific information to influence the comparison, and returns an integer that indicates their relative position in the sort order.
         /// </summary>
