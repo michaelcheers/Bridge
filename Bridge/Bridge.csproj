@@ -347,6 +347,7 @@
     <Compile Include="System\TypeCode.cs" />
     <Compile Include="System\IServiceProvider.cs" />
     <Compile Include="System\Uri.cs" />
+    <Compile Include="System\UriComponents.cs" />
     <Compile Include="System\Version.cs" />
     <Compile Include="Bridge\This.cs" />
     <Compile Include="System\OverflowException.cs" />
@@ -909,7 +910,6 @@
     <Content Include="Resources\Reflection.js" />
     <Content Include="Resources\ClientWebSocket.js" />
     <Content Include="Resources\Object.js" />
-    <Content Include="Resources\Uri.js" />
     <Content Include="Resources\Array.js" />
     <Content Include="Resources\Collections\Comparer.js" />
     <Content Include="Resources\Decimal.js" />
