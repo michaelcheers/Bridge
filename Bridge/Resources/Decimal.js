@@ -242,6 +242,8 @@
     };
 
     System.Decimal.toInt = function (v, tp) {
+        if (v == null)
+            throw new System.InvalidOperationException("Nullable object must have a value.");
         if (!v) {
             return null;
         }
