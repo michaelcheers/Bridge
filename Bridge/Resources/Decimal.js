@@ -168,10 +168,14 @@
     };
 
     System.Decimal.prototype.mul = function (another) {
+        if (another === 0)
+            throw new System.DivideByZeroException();
         return new System.Decimal(this.value.times(System.Decimal.getValue(another)));
     };
 
     System.Decimal.prototype.div = function (another) {
+        if (another === 0)
+            throw new System.DivideByZeroException();
         return new System.Decimal(this.value.dividedBy(System.Decimal.getValue(another)));
     };
 
