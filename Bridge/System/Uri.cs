@@ -6,6 +6,7 @@ namespace System
     /// Provides an object representation of a uniform resource identifier (URI) and easy access to the parts of the URI.
     /// </summary>
     [FileName("Uri.js")]
+    [Reflectable]
     public class Uri
     {
         public Uri(string uriString)
