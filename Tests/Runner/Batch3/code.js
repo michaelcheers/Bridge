@@ -14,10 +14,10 @@ var Person2735 = (function () {
 
 /**
  * Bridge Test library - test github issues up to #1999
- * @version 16.0.0-beta2
+ * @version 16.0.0-beta3
  * @author Object.NET, Inc.
  * @copyright Copyright 2008-2017 Object.NET, Inc.
- * @compiler Bridge.NET 16.0.0-beta2
+ * @compiler Bridge.NET 16.0.0-beta3
  */
 Bridge.assembly("Bridge.ClientTest.Batch3", function ($asm, globals) {
     "use strict";
@@ -22674,6 +22674,98 @@ Bridge.$N1391Result =                     r;
         methods: {
             toString$1: function (s) {
                 return s;
+            }
+        }
+    });
+
+    Bridge.define("Bridge.ClientTest.Batch3.BridgeIssues.Bridge2793", {
+        statics: {
+            methods: {
+                TestAsyncBlockStatement: function () {
+                    var $step = 0,
+                        $task1, 
+                        $jumpFromFinally, 
+                        done, 
+                        $t, 
+                        $asyncBody = Bridge.fn.bind(this, function () {
+                            for (;;) {
+                                $step = System.Array.min([0,1,2,3], $step);
+                                switch ($step) {
+                                    case 0: {
+                                        done = Bridge.Test.NUnit.Assert.Async();
+                                        $t = "a";
+                                        if ($t === "a") {
+                                            $step = 1;
+                                            continue;
+                                        }
+                                        $step = 3;
+                                        continue;
+                                    }
+                                    case 1: {
+                                        $task1 = System.Threading.Tasks.Task.delay(1);
+                                        $step = 2;
+                                        $task1.continueWith($asyncBody, true);
+                                        return;
+                                    }
+                                    case 2: {
+                                        $task1.getAwaitedResult();
+                                        Bridge.Test.NUnit.Assert.True(true);
+                                        $step = 3;
+                                        continue;
+                                    }
+                                    case 3: {
+                                        done();
+                                        return;
+                                    }
+                                    default: {
+                                        return;
+                                    }
+                                }
+                            }
+                        }, arguments);
+
+                    $asyncBody();
+                }
+            }
+        }
+    });
+
+    Bridge.define("Bridge.ClientTest.Batch3.BridgeIssues.Bridge2794", {
+        statics: {
+            methods: {
+                DoSomething: function (o) {
+                    return o;
+                },
+                dosomething: function (o) {
+                    return Bridge.box(77, System.Int32);
+                },
+                TestTemplateTokens: function () {
+                    Bridge.Test.NUnit.Assert.AreEqual("test", Bridge.unbox(this.DoSomething("test")));
+                    Bridge.Test.NUnit.Assert.AreEqual(5, Bridge.unbox(Bridge.ClientTest.Batch3.BridgeIssues.Bridge2794.DoSomething(5)));
+                    Bridge.Test.NUnit.Assert.AreEqual(77, Bridge.unbox(Bridge.ClientTest.Batch3.BridgeIssues.Bridge2794.dosomething()));
+                },
+                TestNameTokens: function () {
+                    var c = new Bridge.ClientTest.Batch3.BridgeIssues.Bridge2794();
+                    Bridge.Test.NUnit.Assert.AreEqual(1, c.M_1(1));
+                    Bridge.Test.NUnit.Assert.AreEqual(1, Bridge.unbox(c.M_1)());
+
+                    Bridge.Test.NUnit.Assert.AreEqual(2, c.M_2(""));
+                    Bridge.Test.NUnit.Assert.AreEqual(2, Bridge.unbox(c.M_2)());
+
+                    Bridge.Test.NUnit.Assert.AreEqual(3, c.m_3(true));
+                    Bridge.Test.NUnit.Assert.AreEqual(3, Bridge.unbox(c.m_3)());
+                }
+            }
+        },
+        methods: {
+            M_1: function (i) {
+                return 1;
+            },
+            M_2: function (s) {
+                return 2;
+            },
+            m_3: function (b) {
+                return 3;
             }
         }
     });
