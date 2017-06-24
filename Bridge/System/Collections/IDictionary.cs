@@ -46,6 +46,7 @@ namespace System.Collections
         void Remove(object key);
     }
     
+    [FileName("dictionary.js")]
     public interface IDictionaryEnumerator : IEnumerator
     {
         DictionaryEntry Entry
@@ -65,6 +66,7 @@ namespace System.Collections
     }
     
     [Serializable]
+    [FileName("dictionary.js")]
     public struct DictionaryEntry
     {
         private object _key;

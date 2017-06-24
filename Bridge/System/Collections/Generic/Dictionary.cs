@@ -45,7 +45,7 @@
 ===========================================================*/
 namespace System.Collections.Generic
 {
-
+    using Bridge;
     using System;
     using System.Collections;
     using System.Diagnostics;
@@ -53,9 +53,11 @@ namespace System.Collections.Generic
 
     [Serializable]
     [System.Runtime.InteropServices.ComVisible(false)]
+    [FileName("dictionary.js")]
     public class Dictionary<TKey, TValue> : IDictionary<TKey, TValue>, IDictionary, IReadOnlyDictionary<TKey, TValue>
     {
 
+        [FileName("dictionary.js")]
         private struct Entry
         {
             public int hashCode;    // Lower 31 bits of hash code, -1 if unused
@@ -720,6 +722,7 @@ namespace System.Collections.Generic
         }
 
         [Serializable]
+        [FileName("dictionary.js")]
         public struct Enumerator : IEnumerator<KeyValuePair<TKey, TValue>>,
             IDictionaryEnumerator
         {
@@ -847,6 +850,7 @@ namespace System.Collections.Generic
         }
         
         [Serializable]
+        [FileName("dictionary.js")]
         public sealed class KeyCollection : ICollection<TKey>, ICollection, IReadOnlyCollection<TKey>
         {
             private Dictionary<TKey, TValue> dictionary;
@@ -980,6 +984,7 @@ namespace System.Collections.Generic
             }
 
             [Serializable]
+            [FileName("dictionary.js")]
             public struct Enumerator : IEnumerator<TKey>, System.Collections.IEnumerator
             {
                 private Dictionary<TKey, TValue> dictionary;
@@ -1057,6 +1062,7 @@ namespace System.Collections.Generic
         }
         
         [Serializable]
+        [FileName("dictionary.js")]
         public sealed class ValueCollection : ICollection<TValue>, ICollection, IReadOnlyCollection<TValue>
         {
             private Dictionary<TKey, TValue> dictionary;
@@ -1188,6 +1194,7 @@ namespace System.Collections.Generic
             }
 
             [Serializable]
+            [FileName("dictionary.js")]
             public struct Enumerator : IEnumerator<TValue>, System.Collections.IEnumerator
             {
                 private Dictionary<TKey, TValue> dictionary;
