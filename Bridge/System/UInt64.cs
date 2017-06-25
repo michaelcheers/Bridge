@@ -30,6 +30,9 @@ namespace System
 
         public extern string ToString(string format, IFormatProvider provider);
 
+        [Template("format(\"\", {provider})")]
+        public extern string ToString(IFormatProvider provider);
+
         public extern int CompareTo(ulong other);
 
         public extern int CompareTo(object obj);

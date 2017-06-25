@@ -99,6 +99,9 @@ namespace System
         [Template("System.DateTime.format({this}, {format}, {provider})")]
         public extern string ToString(string format, IFormatProvider provider);
 
+        [Template("System.DateTime.format({this}, \"\", {provider})")]
+        public extern string ToString(IFormatProvider provider);
+
         public extern int GetDate();
 
         public extern int GetDay();

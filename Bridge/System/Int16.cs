@@ -33,6 +33,9 @@ namespace System
         [Template("System.Int16.format({this}, {format})")]
         public extern string Format(string format);
 
+        [Template("System.Int16.format({this}, \"\", {provider})")]
+        public extern string ToString(IFormatProvider provider);
+
         [Template("System.Int16.format({this}, {format}, {provider})")]
         public extern string Format(string format, IFormatProvider provider);
 

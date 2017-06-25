@@ -42,6 +42,9 @@ namespace System
         [Template("System.SByte.format({this}, {format}, {provider})")]
         public extern string ToString(string format, IFormatProvider provider);
 
+        [Template("System.SByte.format({this}, \"\", {provider})")]
+        public extern string ToString(IFormatProvider provider);
+
         [Template("Bridge.compare({this}, {other})")]
         public extern int CompareTo(sbyte other);
 
