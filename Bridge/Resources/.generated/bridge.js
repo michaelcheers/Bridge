@@ -9335,6 +9335,36 @@ Bridge.Class.addExtend(System.Boolean, [System.IComparable$1(System.Boolean), Sy
             }
         },
 
+        getItem: function (v)
+        {
+            var aIdx = 0;
+            for (var n = 0; n < this.buffer.length; n++)
+            {
+                var i = this.buffer[n], oldIdx = aIdx;
+                aIdx += i.length;
+                if (v < aIdx)
+                {
+                    return this.buffer[n][v - oldIdx];
+                }
+            }
+        },
+
+        setItem: function (v, to) {
+            var aIdx = 0;
+            if (v < 0) {
+                throw new System.IndexOutOfRangeException();
+            }
+            for (var n = 0; n < this.buffer.length; n++) {
+                var i = this.buffer[n], oldIdx = aIdx;
+                aIdx += i.length;
+                if (v < aIdx) {
+                    this.buffer[n][v - oldIdx] = to;
+                    return;
+                }
+            }
+            throw new System.IndexOutOfRangeException();
+        },
+
         getCapacity: function () {
             var length = this.getLength();
 

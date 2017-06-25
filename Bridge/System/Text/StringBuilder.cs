@@ -120,5 +120,14 @@ namespace System.Text
         public extern StringBuilder Replace(char oldChar, char newChar, int startIndex, int count);
 
         public extern StringBuilder Replace(string oldValue, string newValue, int startIndex, int count);
+
+        [Runtime.CompilerServices.IndexerName("Chars")]
+        public extern char this[int index]
+        {
+            [Template("getChars({index})"), External]
+            get;
+            [Template("setChars({index}, {value})"), External]
+            set;
+        }
     }
 }
