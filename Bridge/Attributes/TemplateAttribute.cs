@@ -15,5 +15,10 @@ namespace Bridge
         public extern TemplateAttribute(string format);
 
         public extern TemplateAttribute(string format, string nonExpandedFormat);
+
+        public extern string Fn
+        {
+            get; set;
+        }
     }
 }
