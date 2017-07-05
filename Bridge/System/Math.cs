@@ -1,4 +1,4 @@
-using Bridge;
+﻿using Bridge;
 
 namespace System
 {
@@ -12,20 +12,53 @@ namespace System
         [Convention]
         public const double PI = 3.14159265358979323846;
 
+        /**<summary>Returns the absolute value of a 32-bit signed integer.</summary>
+      <param name="value">A number that is greater than <see cref="F:System.Int32.MinValue" />, but less than or equal to <see cref="F:System.Int32.MaxValue" />.</param>
+      <returns>A 32-bit signed integer, x, such that 0 ≤ x ≤<see cref="F:System.Int32.MaxValue" />.</returns>
+      <exception cref="T:System.OverflowException">
+        <paramref name="value" /> equals <see cref="F:System.Int32.MinValue" />. </exception>*/
         public static extern int Abs(int value);
 
+        /**<summary>Returns the absolute value of a single-precision floating-point number.</summary>
+      <param name="value">A number that is greater than or equal to <see cref="F:System.Single.MinValue" />, but less than or equal to <see cref="F:System.Single.MaxValue" />.</param>
+      <returns>A single-precision floating-point number, x, such that 0 ≤ x ≤<see cref="F:System.Single.MaxValue" />.</returns>*/
         public static extern float Abs(float value);
 
+        /**<summary>Returns the absolute value of a double-precision floating-point number.</summary>
+      <param name="value">A number that is greater than or equal to <see cref="F:System.Double.MinValue" />, but less than or equal to <see cref="F:System.Double.MaxValue" />.</param>
+      <returns>A double-precision floating-point number, x, such that 0 ≤ x ≤<see cref="F:System.Double.MaxValue" />.</returns>*/
         public static extern double Abs(double value);
 
+        /**<summary>Returns the absolute value of a 64-bit signed integer.</summary>
+      <param name="value">A number that is greater than <see cref="F:System.Int64.MinValue" />, but less than or equal to <see cref="F:System.Int64.MaxValue" />.</param>
+      <returns>A 64-bit signed integer, x, such that 0 ≤ x ≤<see cref="F:System.Int64.MaxValue" />.</returns>
+      <exception cref="T:System.OverflowException">
+        <paramref name="value" /> equals <see cref="F:System.Int64.MinValue" />. </exception>
+         */
         [Template("{0}.abs()")]
         public static extern long Abs(long value);
 
+        /**
+         <summary>Returns the absolute value of a <see cref="T:System.Decimal" /> number.</summary>
+      <param name="value">A number that is greater than or equal to <see cref="F:System.Decimal.MinValue" />, but less than or equal to <see cref="F:System.Decimal.MaxValue" />. </param>
+      <returns>A decimal number, x, such that 0 ≤ x ≤<see cref="F:System.Decimal.MaxValue" />.</returns>
+             */
         [Template("{0}.abs()")]
         public static extern decimal Abs(decimal value);
 
+        /**<summary>Returns the absolute value of a 16-bit signed integer.</summary>
+      <param name="value">A number that is greater than <see cref="F:System.Int16.MinValue" />, but less than or equal to <see cref="F:System.Int16.MaxValue" />.</param>
+      <returns>A 16-bit signed integer, x, such that 0 ≤ x ≤<see cref="F:System.Int16.MaxValue" />.</returns>
+      <exception cref="T:System.OverflowException">
+        <paramref name="value" /> equals <see cref="F:System.Int16.MinValue" />. </exception>
+         */
         public static extern short Abs(short value);
-        
+
+        /**<summary>Returns the absolute value of an 8-bit signed integer.</summary>
+      <param name="value">A number that is greater than <see cref="F:System.SByte.MinValue" />, but less than or equal to <see cref="F:System.SByte.MaxValue" />.</param>
+      <returns>An 8-bit signed integer, x, such that 0 ≤ x ≤<see cref="F:System.SByte.MaxValue" />.</returns>
+      <exception cref="T:System.OverflowException">
+        <paramref name="value" /> equals <see cref="F:System.SByte.MinValue" />. </exception>*/
         public static extern sbyte Abs(sbyte value);
 
         /// <summary>
