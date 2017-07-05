@@ -76,7 +76,7 @@ Bridge.assembly("TypeScriptTest", function ($asm, globals) {
                         var value = $t.Current;
                         this.Add(value.key, value.value);
                     }
-                }finally {
+                } finally {
                     if (Bridge.is($t, System.IDisposable)) {
                         $t.System$IDisposable$dispose();
                     }
@@ -271,6 +271,16 @@ Bridge.assembly("TypeScriptTest", function ($asm, globals) {
         }
     });
 
+    Bridge.define("TypeScript.Issues.N2911", {
+        statics: {
+            methods: {
+                initButton_Clicked: function (arg) {
+                    // Should build non generic TS initButton_Clicked(arg: MouseEvent): void;
+                }
+            }
+        }
+    });
+
     Bridge.define("TypeScript.Issues.N1640.GamePlay", {
         inherits: [TypeScript.Issues.N1640.IGamePlay],
         events: {
@@ -298,16 +308,12 @@ Bridge.assembly("TypeScriptTest", function ($asm, globals) {
         props: {
             Value1: 0
         },
-        alias: [
-            "Value1", "TypeScript$Issues$N2029Interface$1$System$Int32$Value1"
-        ]
+        alias: ["Value1", "TypeScript$Issues$N2029Interface$1$System$Int32$Value1"]
     });
 
     Bridge.define("TypeScript.Issues.N2653Zig", {
         inherits: [TypeScript.Issues.N2653IZig],
-        alias: [
-            "zag", "TypeScript$Issues$N2653IZig$zag"
-        ],
+        alias: ["zag", "TypeScript$Issues$N2653IZig$zag"],
         methods: {
             zag: function () {
                 return 1;

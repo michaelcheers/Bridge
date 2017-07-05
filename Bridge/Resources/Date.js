@@ -287,7 +287,6 @@
                                  needRemoveDot = part.length == 0;
 
                                  break;
-                            
                             case "u":
                             case "f":
                             case "ff":
@@ -389,7 +388,8 @@
                     throw new System.FormatException("String does not contain a valid string representation of a date and time.");
                 }
 
-                var df = (provider || System.Globalization.CultureInfo.getCurrentCulture()).getFormat(System.Globalization.DateTimeFormatInfo),
+                var now = new Date(),
+                    df = (provider || System.Globalization.CultureInfo.getCurrentCulture()).getFormat(System.Globalization.DateTimeFormatInfo),
                     am = df.amDesignator,
                     pm = df.pmDesignator,
                     idx = 0,
@@ -397,9 +397,9 @@
                     i = 0,
                     c,
                     token,
-                    year = 0,
-                    month = 1,
-                    date = 1,
+                    year = now.getFullYear(),
+                    month = now.getMonth() + 1,
+                    date = now.getDate(),
                     hh = 0,
                     mm = 0,
                     ss = 0,
@@ -710,7 +710,9 @@
                     if (inQuotes || !tokenMatched) {
                         name = str.substring(idx, idx + token.length);
 
-                        if ((!inQuotes && ((token === ":" && name !== df.timeSeparator) ||
+                        if (!inQuotes && name === ":" && (token === df.timeSeparator || token === ":")) {
+
+                        } else if ((!inQuotes && ((token === ":" && name !== df.timeSeparator) ||
                             (token === "/" && name !== df.dateSeparator))) ||
                             (name !== token && token !== "'" && token !== '"' && token !== "\\")) {
                             invalid = true;
@@ -769,10 +771,12 @@
                     throw new System.FormatException("String does not contain a valid string representation of a date and time.");
                 }
 
-                if (hh < 12 && tt === pm) {
-                    hh = hh - 0 + 12;
-                } else if (hh > 11 && tt === am) {
-                    hh -= 12;
+                if (tt) {
+                    if (hh < 12 && tt === pm) {
+                        hh = hh - 0 + 12;
+                    } else if (hh > 11 && tt === am) {
+                        hh -= 12;
+                    }
                 }
 
                 if (zzh === 0 && zzm === 0 && !utc) {
@@ -892,6 +896,22 @@
 
             subdd: function (a, b) {
                 return Bridge.hasValue$1(a, b) ? (new System.TimeSpan((a - b) * 10000)) : null;
+            },
+
+            addMonths: function (dt, m) {
+                if (!Bridge.hasValue(dt)) {
+                    return null;
+                }
+
+                var r = new Date(dt.getTime());
+                var d = r.getDate();
+                r.setMonth(r.getMonth() + m);
+
+                if (r.getDate() != d) {
+                    r.setDate(0);
+                }
+
+                return r;
             },
 
             gt: function (a, b) {

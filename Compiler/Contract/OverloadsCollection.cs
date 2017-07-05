@@ -206,6 +206,11 @@ namespace Bridge.Contract
             private set;
         }
 
+        public IMember OriginalMember
+        {
+            get; set;
+        }
+
         private OverloadsCollection(IEmitter emitter, FieldDeclaration fieldDeclaration)
         {
             this.Emitter = emitter;
@@ -643,8 +648,21 @@ namespace Bridge.Contract
             bool isTop = list == null;
             list = list ?? new List<IMethod>();
 
+            if (this.Member != null && this.Member.IsOverride && !this.IsTemplateOverride(this.Member))
+            {
+                if (this.OriginalMember == null)
+                {
+                    this.OriginalMember = this.Member;
+                }
+
+                this.Member = InheritanceHelper.GetBaseMember(this.Member);
+                typeDef = this.Member.DeclaringTypeDefinition;
+            }
+
             if (typeDef != null)
             {
+                var isExternalType = this.Emitter.Validator.IsExternalType(typeDef);
+                bool externalFound = false;
                 var methods = typeDef.Methods.Where(m =>
                 {
                     if (m.IsExplicitInterfaceImplementation)
@@ -663,7 +681,7 @@ namespace Bridge.Contract
 
                     var name = this.Emitter.GetEntityName(m);
                     if ((name == this.JsName || name == this.AltJsName || name == this.FieldJsName) && m.IsStatic == this.Static &&
-                        ((m.IsConstructor && this.JsName == JS.Funcs.CONSTRUCTOR) || m.IsConstructor == this.Constructor))
+                        (m.IsConstructor && this.JsName == JS.Funcs.CONSTRUCTOR || m.IsConstructor == this.Constructor))
                     {
                         if (m.IsConstructor != this.Constructor && (m.Parameters.Count > 0 || m.DeclaringTypeDefinition != this.TypeDefinition))
                         {
@@ -673,6 +691,24 @@ namespace Bridge.Contract
                         if (m.IsOverride && !this.IsTemplateOverride(m))
                         {
                             return false;
+                        }
+
+                        if (!isExternalType)
+                        {
+                            var isExtern = !m.HasBody && !m.IsAbstract || this.Emitter.Validator.IsExternalType(m);
+                            if (isExtern)
+                            {
+                                return false;
+                            }
+                        }
+                        else
+                        {
+                            if (externalFound)
+                            {
+                                return false;
+                            }
+
+                            externalFound = true;
                         }
 
                         return true;
@@ -704,6 +740,17 @@ namespace Bridge.Contract
 
             bool isTop = list == null;
             list = list ?? new List<IProperty>();
+
+            if (this.Member != null && this.Member.IsOverride && !this.IsTemplateOverride(this.Member))
+            {
+                if (this.OriginalMember == null)
+                {
+                    this.OriginalMember = this.Member;
+                }
+
+                this.Member = InheritanceHelper.GetBaseMember(this.Member);
+                typeDef = this.Member.DeclaringTypeDefinition;
+            }
 
             if (typeDef != null)
             {
@@ -1085,17 +1132,16 @@ namespace Bridge.Contract
                 if (acceessor != null)
                 {
                     attr = Helpers.GetInheritedAttribute(acceessor, "Bridge.NameAttribute");
+
+                    if (attr != null)
+                    {
+                        name = this.Emitter.GetEntityName(acceessor);
+                    }
                 }
             }
 
             if (attr != null)
             {
-                var value = attr.PositionalArguments.First().ConstantValue;
-                if (value is string)
-                {
-                    name = value.ToString();
-                }
-
                 if (!(iProperty != null || definition is IEvent))
                 {
                     prefix = null;
