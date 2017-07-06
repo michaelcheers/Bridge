@@ -19,13 +19,14 @@
                 v = v.replace(nfInfo.numberDecimalSeparator, ".");
             }
 
-            v = v.replace(/\s/g, "");
             if (v[0] === '+')
                 v = v.substr(1);
 
             if (!/^\s*[+-]?(\d+|\d+.|\d*\.\d+)((e|E)[+-]?\d+)?\s*$/.test(v)) {
                 throw new System.FormatException();
             }
+
+            v = v.replace(/\s/g, "");
         }
 
         if (T && T.precision && typeof v === "number") {
