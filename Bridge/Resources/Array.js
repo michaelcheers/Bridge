@@ -56,7 +56,7 @@
         },
 
         $set: function (indices, value) {
-            this[System.Array.toIndex(this, Array.prototype.slice.call(indices, 0))] = value;
+            this[System.Array.toIndex(this, indices)] = value;
         },
 
         set: function (arr, value) {
@@ -121,6 +121,10 @@
             }
 
             arr.length = length;
+
+            for (var k = 0; k < length; k++) {
+                arr[k] = defvalue;
+            }
 
             if (initValues) {
                 for (i = 0; i < arr.length; i++) {
@@ -532,12 +536,13 @@
 
             if (Bridge.isArray(obj)) {
                 return obj.$type && Bridge.getDefaultValue(obj.$type.$elementType) != null ? Bridge.box(obj[idx], obj.$type.$elementType) : obj[idx];
+            } else if (T && Bridge.isFunction(obj[name = "System$Collections$Generic$IList$1$" + Bridge.getTypeAlias(T) + "$getItem"])) {
+                v = obj[name](idx);
+                return v;
             } else if (Bridge.isFunction(obj.get)) {
                 v = obj.get(idx);
             } else if (Bridge.isFunction(obj.getItem)) {
                 v = obj.getItem(idx);
-            } else if (T && Bridge.isFunction(obj[name = "System$Collections$Generic$IList$1$" + Bridge.getTypeAlias(T) + "$getItem"])) {
-                v = obj[name](idx);
             } else if (Bridge.isFunction(obj[name = "System$Collections$IList$$getItem"])) {
                 v = obj[name](idx);
             } else if (Bridge.isFunction(obj.get_Item)) {

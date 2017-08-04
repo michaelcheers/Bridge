@@ -3,7 +3,7 @@ Bridge.merge(new System.Globalization.CultureInfo("my", true), {
     nativeName: "ဗမာ",
 
     numberFormat: Bridge.merge(new System.Globalization.NumberFormatInfo(), {
-        nanSymbol: "NaN",
+        nanSymbol: "ဂဏန်းမဟုတ်သော",
         negativeSign: "-",
         positiveSign: "+",
         negativeInfinitySymbol: "-∞",
@@ -17,10 +17,10 @@ Bridge.merge(new System.Globalization.CultureInfo("my", true), {
         percentNegativePattern: 1,
         currencySymbol: "K",
         currencyGroupSizes: [3],
-        currencyDecimalDigits: 2,
+        currencyDecimalDigits: 0,
         currencyDecimalSeparator: ".",
         currencyGroupSeparator: ",",
-        currencyNegativePattern: 9,
+        currencyNegativePattern: 8,
         currencyPositivePattern: 3,
         numberGroupSizes: [3],
         numberDecimalDigits: 2,
@@ -30,15 +30,15 @@ Bridge.merge(new System.Globalization.CultureInfo("my", true), {
     }),
 
     dateTimeFormat: Bridge.merge(new System.Globalization.DateTimeFormatInfo(), {
-        abbreviatedDayNames: ["နွေ","လာ","ဂါ","ဟူး","တေး","ကြာ","နေ"],
-        abbreviatedMonthGenitiveNames: ["ဇန်","ဖေ","မတ်","ဧပြီ","မေ","ဇွန်","ဇူ","ဩဂု","စက်တ","အောက်","နိုဝင်","ဒီဇင်",""],
-        abbreviatedMonthNames: ["ဇန်","ဖေ","မတ်","ဧပြီ","မေ","ဇွန်","ဇူ","ဩဂု","စက်တ","အောက်","နိုဝင်","ဒီဇင်",""],
+        abbreviatedDayNames: ["တနင်္ဂနွေ","တနင်္လာ","အင်္ဂါ","ဗုဒ္ဓဟူး","ကြာသပတေး","သောကြာ","စနေ"],
+        abbreviatedMonthGenitiveNames: ["ဇန်","ဖေ","မတ်","ဧ","မေ","ဇွန်","ဇူ","ဩ","စက်","အောက်","နို","ဒီ",""],
+        abbreviatedMonthNames: ["ဇန်","ဖေ","မတ်","ဧ","မေ","ဇွန်","ဇူ","ဩ","စက်","အောက်","နို","ဒီ",""],
         amDesignator: "နံနက်",
         dateSeparator: "-",
         dayNames: ["တနင်္ဂနွေ","တနင်္လာ","အင်္ဂါ","ဗုဒ္ဓဟူး","ကြာသပတေး","သောကြာ","စနေ"],
-        firstDayOfWeek: 1,
-        fullDateTimePattern: "yyyy MMMM d HH:mm:ss",
-        longDatePattern: "yyyy MMMM d",
+        firstDayOfWeek: 0,
+        fullDateTimePattern: "dddd d MMMM yyyy HH:mm:ss",
+        longDatePattern: "dddd d MMMM yyyy",
         longTimePattern: "HH:mm:ss",
         monthDayPattern: "MMMM d",
         monthGenitiveNames: ["ဇန်နဝါရီ","ဖေဖော်ဝါရီ","မတ်","ဧပြီ","မေ","ဇွန်","ဇူလိုင်","ဩဂုတ်","စက်တင်ဘာ","အောက်တိုဘာ","နိုဝင်ဘာ","ဒီဇင်ဘာ",""],
@@ -46,13 +46,13 @@ Bridge.merge(new System.Globalization.CultureInfo("my", true), {
         pmDesignator: "ညနေ",
         rfc1123: "ddd, dd MMM yyyy HH':'mm':'ss 'GMT'",
         shortDatePattern: "dd-MM-yyyy",
-        shortestDayNames: ["နွေ","လာ","ဂါ","ဟူး","တေး","ကြာ","နေ"],
+        shortestDayNames: ["တနင်္ဂနွေ","တနင်္လာ","အင်္ဂါ","ဗုဒ္ဓဟူး","ကြာသပတေး","သောကြာ","စနေ"],
         shortTimePattern: "HH:mm",
         sortableDateTimePattern: "yyyy'-'MM'-'dd'T'HH':'mm':'ss",
         sortableDateTimePattern1: "yyyy'-'MM'-'dd",
         timeSeparator: ":",
         universalSortableDateTimePattern: "yyyy'-'MM'-'dd HH':'mm':'ss'Z'",
-        yearMonthPattern: "yyyy MMMM",
-        roundtripFormat: "yyyy'-'MM'-'dd'T'HH':'mm':'ss.uzzz"
+        yearMonthPattern: "MMMM yyyy",
+        roundtripFormat: "yyyy'-'MM'-'dd'T'HH':'mm':'ss.fffffffzzz"
     })
 });

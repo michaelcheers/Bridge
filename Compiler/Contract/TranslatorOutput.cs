@@ -38,7 +38,12 @@ namespace Bridge.Contract
             get; private set;
         }
 
-        public IEnumerable<TranslatorOutputItem> GetOutputs()
+        public TranslatorOutputItem Report
+        {
+            get; set;
+        }
+
+        public IEnumerable<TranslatorOutputItem> GetOutputs(bool projectOutputOnly = false)
         {
             if (Combined != null)
             {
@@ -53,16 +58,19 @@ namespace Bridge.Contract
                 }
             }
 
-            foreach (var o in References)
+            if (!projectOutputOnly)
             {
-                if (!o.IsEmpty)
+                foreach (var o in References)
                 {
-                    yield return o;
-                }
+                    if (!o.IsEmpty)
+                    {
+                        yield return o;
+                    }
 
-                if (o.MinifiedVersion != null && !o.MinifiedVersion.IsEmpty)
-                {
-                    yield return o.MinifiedVersion;
+                    if (o.MinifiedVersion != null && !o.MinifiedVersion.IsEmpty)
+                    {
+                        yield return o.MinifiedVersion;
+                    }
                 }
             }
 
@@ -112,6 +120,7 @@ namespace Bridge.Contract
             References = new List<TranslatorOutputItem>();
             Locales = new List<TranslatorOutputItem>();
             Resources = new List<TranslatorOutputItem>();
+            Report = new TranslatorOutputItem();
         }
     }
 
@@ -179,13 +188,21 @@ namespace Bridge.Contract
         {
             get
             {
+                if (Content == null ||
+                    ((Content.Buffer == null || Content.Buffer.Length == 0)
+                    && (Content.String == null || Content.String.Length == 0)
+                    && (Content.Builder == null || Content.Builder.Length == 0)))
+                {
+                    isEmpty = true;
+                }
+
                 return isEmpty;
             }
             set
             {
                 isEmpty = value;
 
-                if (value == true)
+                if (value == true && Content != null)
                 {
                     Content.SetContent(null);
                 }
@@ -412,6 +429,7 @@ namespace Bridge.Contract
         PluginOutput = 16,
         Minified = 32,
         Combined = 64,
-        Metadata = 128
+        Metadata = 128,
+        Report = 256
     }
 }

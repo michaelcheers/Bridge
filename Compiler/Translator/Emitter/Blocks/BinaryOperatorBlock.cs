@@ -484,8 +484,9 @@ namespace Bridge.Translator
                 }
             }
 
+            var insideOverflowContext = ConversionBlock.InsideOverflowContext(this.Emitter, binaryOperatorExpression);
             if (binaryOperatorExpression.Operator == BinaryOperatorType.Divide &&
-                !(this.Emitter.IsJavaScriptOverflowMode && !ConversionBlock.InsideOverflowContext(this.Emitter, binaryOperatorExpression)) &&
+                !(this.Emitter.IsJavaScriptOverflowMode && !insideOverflowContext) &&
                 (
                     (Helpers.IsIntegerType(leftResolverResult.Type, this.Emitter.Resolver) &&
                     Helpers.IsIntegerType(rightResolverResult.Type, this.Emitter.Resolver)) ||
@@ -502,12 +503,39 @@ namespace Bridge.Translator
                 return;
             }
 
+            if (binaryOperatorExpression.Operator == BinaryOperatorType.Multiply &&
+                !(this.Emitter.IsJavaScriptOverflowMode && !insideOverflowContext) &&
+                (
+                    (Helpers.IsInteger32Type(leftResolverResult.Type, this.Emitter.Resolver) &&
+                    Helpers.IsInteger32Type(rightResolverResult.Type, this.Emitter.Resolver) &&
+                    Helpers.IsInteger32Type(resolveOperator.Type, this.Emitter.Resolver)) ||
+
+                    (Helpers.IsInteger32Type(this.Emitter.Resolver.Resolver.GetExpectedType(binaryOperatorExpression.Left), this.Emitter.Resolver) &&
+                    Helpers.IsInteger32Type(this.Emitter.Resolver.Resolver.GetExpectedType(binaryOperatorExpression.Right), this.Emitter.Resolver) &&
+                    Helpers.IsInteger32Type(resolveOperator.Type, this.Emitter.Resolver))
+                ))
+            {
+                isUint = NullableType.GetUnderlyingType(resolveOperator.Type).IsKnownType(KnownTypeCode.UInt32);
+                this.Write(JS.Types.BRIDGE_INT + "." + (isUint ? JS.Funcs.Math.UMUL : JS.Funcs.Math.MUL) + "(");
+                this.WritePart(binaryOperatorExpression.Left, toStringForLeft, leftResolverResult);
+                this.Write(", ");
+                this.WritePart(binaryOperatorExpression.Right, toStringForRight, rightResolverResult);
+
+                if (ConversionBlock.IsInCheckedContext(this.Emitter, this.BinaryOperatorExpression))
+                {
+                    this.Write(", 1");
+                }
+
+                this.Write(")");
+                return;
+            }
+
             if (binaryOperatorExpression.Operator == BinaryOperatorType.Add ||
                 binaryOperatorExpression.Operator == BinaryOperatorType.Subtract)
             {
                 var add = binaryOperatorExpression.Operator == BinaryOperatorType.Add;
 
-                if (this.Emitter.Validator.IsDelegateOrLambda(leftResolverResult) && this.Emitter.Validator.IsDelegateOrLambda(rightResolverResult))
+                if (expectedType.Kind == TypeKind.Delegate || this.Emitter.Validator.IsDelegateOrLambda(leftResolverResult) && this.Emitter.Validator.IsDelegateOrLambda(rightResolverResult))
                 {
                     delegateOperator = true;
                     this.Write(add ? JS.Funcs.BRIDGE_COMBINE : JS.Funcs.BRIDGE_REMOVE);

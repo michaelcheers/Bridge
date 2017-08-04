@@ -10,20 +10,20 @@ Bridge.merge(new System.Globalization.CultureInfo("so-SO", true), {
         positiveInfinitySymbol: "∞",
         percentSymbol: "%",
         percentGroupSizes: [3],
-        percentDecimalDigits: 0,
+        percentDecimalDigits: 2,
         percentDecimalSeparator: ".",
         percentGroupSeparator: ",",
-        percentPositivePattern: 2,
+        percentPositivePattern: 1,
         percentNegativePattern: 1,
         currencySymbol: "S",
         currencyGroupSizes: [3],
-        currencyDecimalDigits: 2,
+        currencyDecimalDigits: 0,
         currencyDecimalSeparator: ".",
         currencyGroupSeparator: ",",
         currencyNegativePattern: 1,
         currencyPositivePattern: 0,
         numberGroupSizes: [3],
-        numberDecimalDigits: 0,
+        numberDecimalDigits: 2,
         numberDecimalSeparator: ".",
         numberGroupSeparator: ",",
         numberNegativePattern: 1
@@ -45,7 +45,7 @@ Bridge.merge(new System.Globalization.CultureInfo("so-SO", true), {
         monthNames: ["Bisha Koobaad","Bisha Labaad","Bisha Saddexaad","Bisha Afraad","Bisha Shanaad","Bisha Lixaad","Bisha Todobaad","Bisha Sideedaad","Bisha Sagaalaad","Bisha Tobnaad","Bisha Kow iyo Tobnaad","Bisha Laba iyo Tobnaad",""],
         pmDesignator: "gn.",
         rfc1123: "ddd, dd MMM yyyy HH':'mm':'ss 'GMT'",
-        shortDatePattern: "dd/MM/yy",
+        shortDatePattern: "dd/MM/yyyy",
         shortestDayNames: ["Axd","Isn","Tal","Arb","Kha","Jim","Sab"],
         shortTimePattern: "h:mm tt",
         sortableDateTimePattern: "yyyy'-'MM'-'dd'T'HH':'mm':'ss",
@@ -53,6 +53,6 @@ Bridge.merge(new System.Globalization.CultureInfo("so-SO", true), {
         timeSeparator: ":",
         universalSortableDateTimePattern: "yyyy'-'MM'-'dd HH':'mm':'ss'Z'",
         yearMonthPattern: "MMMM yyyy",
-        roundtripFormat: "yyyy'-'MM'-'dd'T'HH':'mm':'ss.uzzz"
+        roundtripFormat: "yyyy'-'MM'-'dd'T'HH':'mm':'ss.fffffffzzz"
     })
 });

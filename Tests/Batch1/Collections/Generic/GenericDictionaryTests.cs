@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Bridge.ClientTest.Collections.Generic
 {
@@ -23,11 +24,51 @@ namespace Bridge.ClientTest.Collections.Generic
         }
 
         [Test]
+        public void TestPerformance()
+        {
+            var dict = new Dictionary<string, int>();
+
+            var key = new String('x', 10000);
+            dict[key] = 123;
+
+            var timer = Stopwatch.StartNew();
+            for (var i = 0; i < 100000; i++)
+            {
+                var f = dict[key];
+            }
+            timer.Stop();
+
+            Assert.True(timer.ElapsedMilliseconds < 3000, "Performance shoud be faster than 3000ms, actual = " + timer.ElapsedMilliseconds);
+        }
+
+        [Test]
+        public void TestOrder()
+        {
+            Dictionary<int, string> data = new Dictionary<int, string>();
+
+            data.Add(30, "a");
+            data.Add(10, "c");
+            data.Add(20, "b");
+
+            string actualOutput = "";
+            string expectedOutput = "30 10 20 ";
+
+            foreach (int k in data.Keys)
+            {
+                actualOutput += k.ToString() + " ";
+            }
+
+            Assert.AreEqual(expectedOutput, actualOutput);
+        }
+
+        [Test]
         public void TypePropertiesAreCorrect()
         {
             Assert.AreEqual("System.Collections.Generic.Dictionary`2[[System.Int32, mscorlib],[System.String, mscorlib]]", typeof(Dictionary<int, string>).FullName, "FullName should be correct");
+            Assert.True(typeof(Dictionary<int, string>).IsClass, "IsClass should be true");
             object dict = new Dictionary<int, string>();
             Assert.True(dict is Dictionary<int, string>, "is Dictionary<int,string> should be true");
+            // #1626
             Assert.True(dict is IDictionary<int, string>, "is IDictionary<int,string> should be true");
             Assert.True(dict is IEnumerable, "is IEnumerable should be true");
             Assert.True(dict is IEnumerable<KeyValuePair<int, string>>, "is IEnumerable<KeyValuePair<int,string>> should be true");
@@ -36,21 +77,28 @@ namespace Bridge.ClientTest.Collections.Generic
         }
 
         [Test]
-        public void DefaultConstructorWorks()
+        public void DefaultConstructorWorks_SPI_1549()
         {
             var d = new Dictionary<int, string>();
+            Assert.AreEqual(0, d.Count);
             Assert.AreEqual(0, d.Count, "Count is 0");
             Assert.AreEqual("Bridge.CustomEnumerator", d.GetEnumerator().GetType().FullName, "Enumerator");
             Assert.AreEqual("System.Collections.Generic.EqualityComparer`1[[System.Int32, mscorlib]]", d.Comparer.GetType().FullName, "Comparer");
+
+            // #1549
+            Assert.AreStrictEqual(EqualityComparer<int>.Default, d.Comparer);
         }
 
         [Test]
-        public void CapacityConstructorWorks()
+        public void CapacityConstructorWorks_SPI_1549()
         {
             var d = new Dictionary<int, string>(10);
             Assert.AreEqual(0, d.Count);
             Assert.AreEqual("Bridge.CustomEnumerator", d.GetEnumerator().GetType().FullName, "Enumerator");
             Assert.AreEqual("System.Collections.Generic.EqualityComparer`1[[System.Int32, mscorlib]]", d.Comparer.GetType().FullName, "Comparer");
+
+            // #1549
+            Assert.AreStrictEqual(EqualityComparer<int>.Default, d.Comparer);
         }
 
         [Test]
@@ -59,7 +107,61 @@ namespace Bridge.ClientTest.Collections.Generic
             var c = new TestEqualityComparer();
             var d = new Dictionary<string, string>(10, c);
             Assert.AreEqual(0, d.Count);
+
             Assert.AreStrictEqual(c, d.Comparer);
+        }
+
+        // #NoSupport
+        //[Test]
+        //public void JsDictionaryConstructorWorks()
+        //{
+        //    var orig = JsDictionary<string, int>.GetDictionary(new
+        //    {
+        //        a = 1,
+        //        b = 2
+        //    });
+        //    var d = new Dictionary<string, int>(orig);
+        //    Assert.False((object)d == (object)orig);
+        //    Assert.AreEqual(d.Count, 2);
+        //    Assert.AreEqual(d["a"], 1);
+        //    Assert.AreEqual(d["b"], 2);
+        //    Assert.AreStrictEqual(d.Comparer, EqualityComparer<string>.Default);
+        //}
+
+        // #NoSupport
+        //[Test]
+        //public void JsDictionaryAndEqualityComparerConstructorWorks()
+        //{
+        //    var c = new TestEqualityComparer();
+        //    var orig = JsDictionary<string, int>.GetDictionary(new
+        //    {
+        //        a = 1,
+        //        b = 2
+        //    });
+        //    var d = new Dictionary<string, int>(orig, c);
+        //    Assert.False((object)d == (object)orig);
+        //    Assert.AreEqual(d.Count, 2);
+        //    Assert.AreEqual(d["a"], 1);
+        //    Assert.AreEqual(d["b"], 2);
+        //    Assert.AreStrictEqual(d.Comparer, c);
+        //}
+
+        [Test]
+        public void CopyConstructorWorks_SPI_1549()
+        {
+            var orig = new Dictionary<string, int>();
+            orig["a"] = 1;
+            orig["b"] = 2;
+
+            var d = new Dictionary<string, int>(orig);
+            var d2 = new Dictionary<string, int>(d);
+            Assert.False((object)d == (object)d2);
+            Assert.AreEqual(2, d2.Count);
+            Assert.AreEqual(1, d2["a"]);
+            Assert.AreEqual(2, d2["b"]);
+
+            // #1549
+            Assert.AreStrictEqual(EqualityComparer<string>.Default, d2.Comparer);
         }
 
         [Test]
@@ -69,6 +171,23 @@ namespace Bridge.ClientTest.Collections.Generic
             var d = new Dictionary<string, int>(c);
             Assert.AreEqual(0, d.Count);
             Assert.AreStrictEqual(c, d.Comparer);
+        }
+
+        [Test]
+        public void ConstructorWithBothDictionaryAndEqualityComparerWorks()
+        {
+            var c = new TestEqualityComparer();
+            var orig = new Dictionary<string, int>();
+            orig["a"] = 1;
+            orig["b"] = 2;
+
+            var d = new Dictionary<string, int>(orig);
+            var d2 = new Dictionary<string, int>(d, c);
+            Assert.False((object)d == (object)d2);
+            Assert.AreEqual(2, d2.Count);
+            Assert.AreEqual(1, d2["a"]);
+            Assert.AreEqual(2, d2["b"]);
+            Assert.AreStrictEqual(c, d2.Comparer);
         }
 
         [Test]
@@ -450,12 +569,12 @@ namespace Bridge.ClientTest.Collections.Generic
             Assert.AreEqual(null, el.Value, "Enumerable initial value");
             Assert.True(en.MoveNext(), "Enumerable MoveNext true");
             el = en.Current;
-            Assert.AreEqual(1, el.Key, "Enumerable first key");
-            Assert.AreEqual("a", el.Value, "Enumerable first value");
+            Assert.AreEqual(2, el.Key, "Enumerable first key");
+            Assert.AreEqual("b", el.Value, "Enumerable first value");
             Assert.True(en.MoveNext(), "Enumerable MoveNext true");
             el = en.Current;
-            Assert.AreEqual(2, el.Key, "Enumerable second key");
-            Assert.AreEqual("b", el.Value, "Enumerable second value");
+            Assert.AreEqual(1, el.Key, "Enumerable second key");
+            Assert.AreEqual("a", el.Value, "Enumerable second value");
             Assert.False(en.MoveNext(), "Enumerable MoveNext false");
 
 
@@ -477,11 +596,11 @@ namespace Bridge.ClientTest.Collections.Generic
             var cta = new KeyValuePair<int, string>[3];
             d.CopyTo(cta, 0);
 
-            Assert.AreEqual(1, cta[0].Key, "ICollection<KeyValuePair> CopyTo Getter[0] Key");
-            Assert.AreEqual("a", cta[0].Value, "ICollection<KeyValuePair> CopyTo Getter[0] Value");
+            Assert.AreEqual(2, cta[0].Key, "ICollection<KeyValuePair> CopyTo Getter[0] Key");
+            Assert.AreEqual("b", cta[0].Value, "ICollection<KeyValuePair> CopyTo Getter[0] Value");
 
-            Assert.AreEqual(2, cta[1].Key, "ICollection<KeyValuePair> CopyTo Getter[1] Key");
-            Assert.AreEqual("b", cta[1].Value, "ICollection<KeyValuePair> CopyTo Getter[1] Value");
+            Assert.AreEqual(1, cta[1].Key, "ICollection<KeyValuePair> CopyTo Getter[1] Key");
+            Assert.AreEqual("a", cta[1].Value, "ICollection<KeyValuePair> CopyTo Getter[1] Value");
 
             Assert.AreEqual(0, cta[2].Key, "ICollection<KeyValuePair> CopyTo Getter[2] Key");
             Assert.AreEqual(null, cta[2].Value, "ICollection<KeyValuePair> CopyTo Getter[2] Value");
@@ -567,7 +686,7 @@ namespace Bridge.ClientTest.Collections.Generic
         {
             IReadOnlyCollection<KeyValuePair<int, string>> d = new Dictionary<int, string> { { 1, "a" }, { 2, "b" } };
 
-             // IReadOnlyCollection<KeyValuePair<TKey, TValue>>
+            // IReadOnlyCollection<KeyValuePair<TKey, TValue>>
 
             Assert.AreEqual(2, d.Count, "Count");
 

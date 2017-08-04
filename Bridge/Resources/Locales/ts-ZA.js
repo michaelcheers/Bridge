@@ -1,5 +1,5 @@
 Bridge.merge(new System.Globalization.CultureInfo("ts-ZA", true), {
-    englishName: "Tsonga (South Africa)",
+    englishName: "Xitsonga (South Africa)",
     nativeName: "Xitsonga (South Africa)",
 
     numberFormat: Bridge.merge(new System.Globalization.NumberFormatInfo(), {
@@ -10,20 +10,20 @@ Bridge.merge(new System.Globalization.CultureInfo("ts-ZA", true), {
         positiveInfinitySymbol: "∞",
         percentSymbol: "%",
         percentGroupSizes: [3],
-        percentDecimalDigits: 0,
+        percentDecimalDigits: 2,
         percentDecimalSeparator: ",",
         percentGroupSeparator: " ",
-        percentPositivePattern: 2,
+        percentPositivePattern: 1,
         percentNegativePattern: 1,
         currencySymbol: "R",
         currencyGroupSizes: [3],
         currencyDecimalDigits: 2,
         currencyDecimalSeparator: ",",
         currencyGroupSeparator: " ",
-        currencyNegativePattern: 1,
-        currencyPositivePattern: 0,
+        currencyNegativePattern: 9,
+        currencyPositivePattern: 2,
         numberGroupSizes: [3],
-        numberDecimalDigits: 0,
+        numberDecimalDigits: 2,
         numberDecimalSeparator: ",",
         numberGroupSeparator: " ",
         numberNegativePattern: 1
@@ -31,18 +31,18 @@ Bridge.merge(new System.Globalization.CultureInfo("ts-ZA", true), {
 
     dateTimeFormat: Bridge.merge(new System.Globalization.DateTimeFormatInfo(), {
         abbreviatedDayNames: ["Son","Mus","Bir","Har","Ne","Tlh","Mug"],
-        abbreviatedMonthGenitiveNames: ["Sun","Yan","Kul","Dzi","Mud","Kho","Maw","Mha","Ndz","Nhl","Huk","N'w",""],
-        abbreviatedMonthNames: ["Sun","Yan","Kul","Dzi","Mud","Kho","Maw","Mha","Ndz","Nhl","Huk","N'w",""],
+        abbreviatedMonthGenitiveNames: ["Sun","Yan","Kul","Dzi","Mud","Kho","Maw","Mha","Ndz","Nhl","Huk","N’w",""],
+        abbreviatedMonthNames: ["Sun","Yan","Kul","Dzi","Mud","Kho","Maw","Mha","Ndz","Nhl","Huk","N’w",""],
         amDesignator: "AM",
         dateSeparator: "-",
-        dayNames: ["Sonto","Musumbhunuku","Ravumbirhi","Ravunharhu","Ravumune","Ravuntlhanu","Mugqivela"],
+        dayNames: ["Sonta","Musumbhunuku","Ravumbirhi","Ravunharhu","Ravumune","Ravuntlhanu","Mugqivela"],
         firstDayOfWeek: 0,
         fullDateTimePattern: "yyyy MMMM d, dddd HH:mm:ss",
         longDatePattern: "yyyy MMMM d, dddd",
         longTimePattern: "HH:mm:ss",
         monthDayPattern: "MMMM d",
-        monthGenitiveNames: ["Sunguti","Nyenyenyani","Nyenyankulu","Dzivamisoko","Mudyaxihi","Khotavuxika","Mawuwani","Mhawuri","Ndzhati","Nhlangula","Hukuri","N'wendzamhala",""],
-        monthNames: ["Sunguti","Nyenyenyani","Nyenyankulu","Dzivamisoko","Mudyaxihi","Khotavuxika","Mawuwani","Mhawuri","Ndzhati","Nhlangula","Hukuri","N'wendzamhala",""],
+        monthGenitiveNames: ["Sunguti","Nyenyenyani","Nyenyankulu","Dzivamisoko","Mudyaxihi","Khotavuxika","Mawuwani","Mhawuri","Ndzhati","Nhlangula","Hukuri","N’wendzamhala",""],
+        monthNames: ["Sunguti","Nyenyenyani","Nyenyankulu","Dzivamisoko","Mudyaxihi","Khotavuxika","Mawuwani","Mhawuri","Ndzhati","Nhlangula","Hukuri","N’wendzamhala",""],
         pmDesignator: "PM",
         rfc1123: "ddd, dd MMM yyyy HH':'mm':'ss 'GMT'",
         shortDatePattern: "yyyy-MM-dd",
@@ -53,6 +53,6 @@ Bridge.merge(new System.Globalization.CultureInfo("ts-ZA", true), {
         timeSeparator: ":",
         universalSortableDateTimePattern: "yyyy'-'MM'-'dd HH':'mm':'ss'Z'",
         yearMonthPattern: "yyyy MMMM",
-        roundtripFormat: "yyyy'-'MM'-'dd'T'HH':'mm':'ss.uzzz"
+        roundtripFormat: "yyyy'-'MM'-'dd'T'HH':'mm':'ss.fffffffzzz"
     })
 });

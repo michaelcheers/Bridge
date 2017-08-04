@@ -6,8 +6,8 @@ Bridge.merge(new System.Globalization.CultureInfo("es-ES", true), {
         nanSymbol: "NaN",
         negativeSign: "-",
         positiveSign: "+",
-        negativeInfinitySymbol: "-Infinito",
-        positiveInfinitySymbol: "Infinito",
+        negativeInfinitySymbol: "-∞",
+        positiveInfinitySymbol: "∞",
         percentSymbol: "%",
         percentGroupSizes: [3],
         percentDecimalDigits: 2,
@@ -40,7 +40,7 @@ Bridge.merge(new System.Globalization.CultureInfo("es-ES", true), {
         fullDateTimePattern: "dddd, d' de 'MMMM' de 'yyyy H:mm:ss",
         longDatePattern: "dddd, d' de 'MMMM' de 'yyyy",
         longTimePattern: "H:mm:ss",
-        monthDayPattern: "d' de 'MMMM",
+        monthDayPattern: "d 'de' MMMM",
         monthGenitiveNames: ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre",""],
         monthNames: ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre",""],
         pmDesignator: "",
@@ -53,6 +53,6 @@ Bridge.merge(new System.Globalization.CultureInfo("es-ES", true), {
         timeSeparator: ":",
         universalSortableDateTimePattern: "yyyy'-'MM'-'dd HH':'mm':'ss'Z'",
         yearMonthPattern: "MMMM' de 'yyyy",
-        roundtripFormat: "yyyy'-'MM'-'dd'T'HH':'mm':'ss.uzzz"
+        roundtripFormat: "yyyy'-'MM'-'dd'T'HH':'mm':'ss.fffffffzzz"
     })
 });

@@ -17,7 +17,7 @@ namespace Bridge.Translator
 {
     public partial class Translator : ITranslator
     {
-        public const string Bridge_ASSEMBLY = CS.NS.ROOT;
+        public const string Bridge_ASSEMBLY = CS.NS.BRIDGE;
         public const string Bridge_ASSEMBLY_DOT = Bridge_ASSEMBLY + ".";
         public const string BridgeResourcesPlusSeparatedFormatList = "Bridge.Resources.list";
         public const string BridgeResourcesJsonFormatList = "Bridge.Resources.json";
@@ -116,6 +116,15 @@ namespace Bridge.Translator
                     this.BuildAssembly();
                 }
             }
+
+            this.Outputs.Report = new TranslatorOutputItem
+            {
+                Content = new StringBuilder(),
+                OutputKind = TranslatorOutputKind.Report,
+                OutputType = TranslatorOutputType.None,
+                Name = this.AssemblyInfo.Report.FileName ?? "bridge.report.log",
+                Location = this.AssemblyInfo.Report.Path
+            };
 
             var references = this.InspectReferences();
             this.References = references;

@@ -1,6 +1,6 @@
 Bridge.merge(new System.Globalization.CultureInfo("gn", true), {
     englishName: "Guarani",
-    nativeName: "Guarani",
+    nativeName: "Avañe’ẽ",
 
     numberFormat: Bridge.merge(new System.Globalization.NumberFormatInfo(), {
         nanSymbol: "ndaha’éi papaha",
@@ -53,6 +53,6 @@ Bridge.merge(new System.Globalization.CultureInfo("gn", true), {
         timeSeparator: ":",
         universalSortableDateTimePattern: "yyyy'-'MM'-'dd HH':'mm':'ss'Z'",
         yearMonthPattern: "MMMM, yyyy",
-        roundtripFormat: "yyyy'-'MM'-'dd'T'HH':'mm':'ss.uzzz"
+        roundtripFormat: "yyyy'-'MM'-'dd'T'HH':'mm':'ss.fffffffzzz"
     })
 });

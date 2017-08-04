@@ -37,6 +37,7 @@
         public const string MODULE_REGEX_JS = "RegexJS";
         public const string MODULE_ENUM = "Enum";
         public const string MODULE_GUID = "Guid";
+        public const string MODULE_STRUCT = "Struct";
 
         public const string MODULE_MATH = "Math";
         public const string MODULE_DECIMAL_MATH = "Decimal Math";
@@ -90,6 +91,9 @@
         public const string MODULE_NULLREFERENCEEXCEPTION = PREFIX_EXCEPTIONS; // + "NullReferenceException";
         public const string MODULE_ARGUMENTOUTOFRANGEEXCEPTION = PREFIX_EXCEPTIONS; // + "ArgumentOutOfRangeException";
 
+        public const string MODULE_ACTIVATOR = "Activator";
+        public const string MODULE_IFORMATTABLE = "IFormattable";
+        public const string MODULE_DELEGATE = "Delegate";
         public const string MODULE_THREADING = "Threading";
         public const string MODULE_DIAGNOSTICS = "Diagnostics";
         public const string MODULE_CHECKED_UNCKECKED = "Checked/Unckecked";
@@ -100,6 +104,8 @@
         public const string MODULE_BRIDGE_CONSOLE = "Bridge Console";
         public const string MODULE_SYSTEM_CONSOLE = "System Console";
         public const string MODULE_OBJECTLITERAL = "[ObjectLiteral]";
+        public const string MODULE_SCRIPT = "Script";
+        public const string MODULE_RUNTIME = "Runtime helpers"; // + "Array";
 
         public const string IGNORE_DATE = null;
     }
