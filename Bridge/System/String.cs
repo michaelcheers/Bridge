@@ -443,16 +443,35 @@ namespace System
         [Template("System.String.lastIndexOf({this}, {value}, {startIndex}, {count})")]
         public extern int LastIndexOf(string value, int startIndex, int count);
 
+        /// <summary>
+        /// Reports the zero-based index position of the last occurrence of a specified string within this instance. The search starts at a specified character position and proceeds backward toward the beginning of the string for the specified number of character positions. A parameter specifies the type of comparison to perform when searching for the specified string.
+        /// </summary>
+        /// <param name="value">The string to seek.</param>
+        /// <param name="startIndex">The search starting position. The search proceeds from startIndex toward the beginning of this instance.</param>
+        /// <param name="count">The number of character positions to examine.</param>
+        /// <param name="stringComparison">One of the enumeration values that specifies the rules for the search.</param>
+        /// <returns>The zero-based starting index position of the value parameter if that string is found, or -1 if it is not found or if the current instance equals String.Empty. If value is String.Empty, the return value is the smaller of startIndex and the last index position in this instance.</returns>
         [Template("System.String.lastIndexOf({this}, {value}, {startIndex}, {count}, {stringComparision})")]
         public extern int LastIndexOf(string value, int startIndex, int count, StringComparison stringComparison);
 
+        /// <summary>
+        /// Reports the zero-based index of the last occurrence of a specified string within the current String object. The search starts at a specified character position and proceeds backward toward the beginning of the string. A parameter specifies the type of comparison to perform when searching for the specified string.
+        /// </summary>
+        /// <param name="value">The string to seek.</param>
+        /// <param name="startIndex">The search starting position. The search proceeds from startIndex toward the beginning of this instance.</param>
+        /// <param name="stringComparison">One of the enumeration values that specifies the rules for the search.</param>
+        /// <returns>The zero-based starting index position of the value parameter if that string is found, or -1 if it is not found or if the current instance equals String.Empty. If value is String.Empty, the return value is the smaller of startIndex and the last index position in this instance.</returns>
         [Template("System.String.lastIndexOf({this}, {value}, {startIndex}, {value}.length, {stringComparision})")]
         public extern int LastIndexOf(string value, int startIndex, StringComparison stringComparison);
 
+        /// <summary>
+        /// Reports the zero-based index of the last occurrence of a specified string within the current String object. A parameter specifies the type of search to use for the specified string.
+        /// </summary>
+        /// <param name="value">The string to seek.</param>
+        /// <param name="stringComparison">One of the enumeration values that specifies the rules for the search.</param>
+        /// <returns>The zero-based starting index position of the value parameter if that string is found, or -1 if it is not. If value is String.Empty, the return value is the last index position in this instance.</returns>
         [Template("System.String.lastIndexOf({this}, {value}, 0, {value}.length, {stringComparision})")]
         public extern int LastIndexOf(string value, StringComparison stringComparison);
-
-        // TODO: Missing System.String.LastIndexOf Method overloads #2396
 
         /// <summary>
         /// Reports the zero-based index position of the last occurrence in this instance of one or more characters specified in a Unicode array.
