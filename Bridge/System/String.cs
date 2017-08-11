@@ -328,6 +328,7 @@ namespace System
         /// </summary>
         /// <param name="value">The string to seek.</param>
         /// <returns>The zero-based index position of value if that string is found, or -1 if it is not. If value is String.Empty, the return value is 0.</returns>
+        [Template("System.String.indexOf({this}, {value})")]
         public extern int IndexOf(string value);
 
         /// <summary>
