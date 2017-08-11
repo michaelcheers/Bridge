@@ -256,7 +256,7 @@ Bridge.assembly("Bridge.Test.Bridge.ClientTest", function ($asm, globals) {
                     return System.String.replaceAll(System.String.replaceAll(s, "<", "&lt;"), ">", "&gt;");
                 },
                 HasClass: function (el, name) {
-                    return (System.String.concat(" ", el.className, " ")).indexOf(System.String.concat(" ", name, " ")) >= 0;
+                    return System.String.indexOf((System.String.concat(" ", el.className, " ")), System.String.concat(" ", name, " ")) >= 0;
                 },
                 AddClass: function (el, name) {
                     if (!Bridge.Test.Runtime.ContextHelper.HasClass(el, name)) {
@@ -266,7 +266,7 @@ Bridge.assembly("Bridge.Test.Bridge.ClientTest", function ($asm, globals) {
                 RemoveClass: function (el, name) {
                     var set = System.String.concat(" ", el.className, " ");
 
-                    while (set.indexOf(System.String.concat(" ", name, " ")) >= 0) {
+                    while (System.String.indexOf(set, System.String.concat(" ", name, " ")) >= 0) {
                         set = System.String.replaceAll(set, System.String.concat(" ", name, " "), " ");
                     }
 
