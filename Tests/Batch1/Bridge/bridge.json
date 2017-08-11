@@ -5,9 +5,11 @@
   "fileName": "code.js",
   "outputBy": "Project",
   "localesOutput": "locales",
-  "locales": "ru-RU;en-US;es*",
+  "locales": "ru-RU;en-US;en-GB;nb-NO;es*",
+  "combineLocales":  true,
   "fileNameCasing": "CamelCase",
-  "sourceMap": true,
+  "console": true,
+  "sourceMap": false,
   "html": {
     "disabled": true
   },

@@ -45,7 +45,7 @@ Bridge.assembly("Bridge.Test.Bridge.ClientTest", function ($asm, globals) {
                     var fixtureContext = instance.GetContext();
 
                     if (testContext != null || fixtureContext != null) {
-                        Bridge.Test.Runtime.ContextHelper.SetContext(assert, ($t=new Bridge.Test.Runtime.Context(), $t.FixtureCtx = fixtureContext, $t.TestCtx = testContext, $t));
+                        Bridge.Test.Runtime.ContextHelper.SetContext(assert, ($t = new Bridge.Test.Runtime.Context(), $t.FixtureCtx = fixtureContext, $t.TestCtx = testContext, $t));
                     }
 
                     try {
@@ -98,14 +98,13 @@ Bridge.assembly("Bridge.Test.Bridge.ClientTest", function ($asm, globals) {
                         return;
                     }
 
-                    assert[System.Array.index(Bridge.Test.Runtime.ContextHelper.contextName, assert)] = ctx;
+                    assert[Bridge.Test.Runtime.ContextHelper.contextName] = ctx;
                 },
                 GetTestId: function (details) {
                     return Bridge.as(details.testId, System.String);
                 },
                 GetAssert: function () {
-                    var $t;
-                    var a = Bridge.unbox(($t = QUnit.config.current).assert);
+                    var a = Bridge.unbox(QUnit.config.current.assert);
 
                     return a;
                 },
@@ -114,7 +113,7 @@ Bridge.assembly("Bridge.Test.Bridge.ClientTest", function ($asm, globals) {
                         return null;
                     }
 
-                    return Bridge.as(assert[System.Array.index(Bridge.Test.Runtime.ContextHelper.contextName, assert)], Bridge.Test.Runtime.Context);
+                    return Bridge.as(assert[Bridge.Test.Runtime.ContextHelper.contextName], Bridge.Test.Runtime.Context);
                 },
                 GetContext: function () {
                     return Bridge.Test.Runtime.ContextHelper.GetContext$1(Bridge.Test.Runtime.ContextHelper.GetAssert());
@@ -137,7 +136,7 @@ Bridge.assembly("Bridge.Test.Bridge.ClientTest", function ($asm, globals) {
                         return null;
                     }
 
-                    return source[System.Array.index(0, source)];
+                    return source[0];
                 },
                 AdjustSourceElement: function (ctx, testItem) {
                     var $t;
@@ -206,7 +205,7 @@ Bridge.assembly("Bridge.Test.Bridge.ClientTest", function ($asm, globals) {
 
                         var els = testItem.getElementsByTagName("ol");
                         if (els != null && els.length > 0) {
-                            assertList = els[System.Array.index(0, els)];
+                            assertList = els[0];
                         }
 
                         var testTitle = testItem.firstChild;
@@ -237,7 +236,7 @@ Bridge.assembly("Bridge.Test.Bridge.ClientTest", function ($asm, globals) {
                         return null;
                     }
 
-                    return source[System.Array.index(0, source)];
+                    return source[0];
                 },
                 GetTestSource$1: function (testId) {
                     var output = Bridge.Test.Runtime.ContextHelper.GetTestOutput(testId);
@@ -257,7 +256,7 @@ Bridge.assembly("Bridge.Test.Bridge.ClientTest", function ($asm, globals) {
                     return System.String.replaceAll(System.String.replaceAll(s, "<", "&lt;"), ">", "&gt;");
                 },
                 HasClass: function (el, name) {
-                    return System.String.indexOf((System.String.concat(" ", el.className, " ")), System.String.concat(" ", name, " ")) >= 0;
+                    return (System.String.concat(" ", el.className, " ")).indexOf(System.String.concat(" ", name, " ")) >= 0;
                 },
                 AddClass: function (el, name) {
                     if (!Bridge.Test.Runtime.ContextHelper.HasClass(el, name)) {
@@ -267,7 +266,7 @@ Bridge.assembly("Bridge.Test.Bridge.ClientTest", function ($asm, globals) {
                 RemoveClass: function (el, name) {
                     var set = System.String.concat(" ", el.className, " ");
 
-                    while (System.String.indexOf(set, System.String.concat(" ", name, " ")) >= 0) {
+                    while (set.indexOf(System.String.concat(" ", name, " ")) >= 0) {
                         set = System.String.replaceAll(set, System.String.concat(" ", name, " "), " ");
                     }
 
@@ -301,7 +300,7 @@ Bridge.assembly("Bridge.Test.Bridge.ClientTest", function ($asm, globals) {
                             }
 
                         }
-                    }finally {
+                    } finally {
                         if (Bridge.is($t, System.IDisposable)) {
                             $t.System$IDisposable$dispose();
                         }

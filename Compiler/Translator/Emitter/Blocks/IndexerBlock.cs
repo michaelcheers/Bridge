@@ -195,7 +195,6 @@ namespace Bridge.Translator
 
         public static IndexerAccessor GetIndexerAccessor(IEmitter emitter, IProperty member, bool setter)
         {
-            string inlineCode = null;
             var method = setter ? member.Setter : member.Getter;
 
             if (method == null)
@@ -204,24 +203,13 @@ namespace Bridge.Translator
             }
 
             var inlineAttr = emitter.GetAttribute(method.Attributes, Translator.Bridge_ASSEMBLY + ".TemplateAttribute");
-
             var ignoreAccessor = emitter.Validator.IsExternalType(method);
-
-            if (inlineAttr != null)
-            {
-                var inlineArg = inlineAttr.PositionalArguments[0];
-
-                if (inlineArg.ConstantValue != null)
-                {
-                    inlineCode = inlineArg.ConstantValue.ToString();
-                }
-            }
 
             return new IndexerAccessor
             {
                 IgnoreAccessor = ignoreAccessor,
                 InlineAttr = inlineAttr,
-                InlineCode = inlineCode,
+                InlineCode = emitter.GetInline(method),
                 Method = method
             };
         }
@@ -231,6 +219,12 @@ namespace Bridge.Translator
             var oldIsAssignment = this.Emitter.IsAssignment;
             var oldUnary = this.Emitter.IsUnaryAccessor;
             var inlineCode = current.InlineCode;
+            var rr = this.Emitter.Resolver.ResolveNode(indexerExpression, this.Emitter) as MemberResolveResult;
+            if (rr != null)
+            {
+                inlineCode = Helpers.ConvertTokens(this.Emitter, inlineCode, rr.Member);
+            }
+            
             bool hasThis = inlineCode != null && inlineCode.Contains("{this}");
 
             if (inlineCode != null && inlineCode.StartsWith("<self>"))
@@ -262,7 +256,7 @@ namespace Bridge.Translator
 
                 this.Emitter.Output = new StringBuilder();
                 inlineCode = inlineCode.Replace("{0}", "[[0]]");
-                new InlineArgumentsBlock(this.Emitter, new ArgumentsInfo(this.Emitter, indexerExpression, this.Emitter.Resolver.ResolveNode(indexerExpression, this.Emitter) as InvocationResolveResult), inlineCode).Emit();
+                new InlineArgumentsBlock(this.Emitter, new ArgumentsInfo(this.Emitter, indexerExpression, rr as InvocationResolveResult), inlineCode).Emit();
                 inlineCode = this.Emitter.Output.ToString();
                 inlineCode = inlineCode.Replace("[[0]]", "{0}");
 
@@ -350,7 +344,7 @@ namespace Bridge.Translator
                     else
                     {
                         nativeImplementation =
-                            memberResolveResult.Member.DeclaringTypeDefinition.ParentAssembly.AssemblyName == CS.NS.ROOT ||
+                            memberResolveResult.Member.DeclaringTypeDefinition.ParentAssembly.AssemblyName == CS.NS.BRIDGE ||
                             !this.Emitter.Validator.IsExternalType(memberResolveResult.Member.DeclaringTypeDefinition);
                     }
 
@@ -1347,8 +1341,9 @@ namespace Bridge.Translator
                            (memberTargetrr.TargetResult is ThisResolveResult ||
                             memberTargetrr.TargetResult is TypeResolveResult ||
                             memberTargetrr.TargetResult is LocalResolveResult);
-            bool isSimple = targetrr is ThisResolveResult || targetrr is LocalResolveResult ||
-                            targetrr is ConstantResolveResult || isField;
+            bool isArray = targetrr.Type.Kind == TypeKind.Array && !ConversionBlock.IsInUncheckedContext(this.Emitter, indexerExpression, false);
+            bool isSimple = !isArray || (targetrr is ThisResolveResult || targetrr is LocalResolveResult ||
+                            targetrr is ConstantResolveResult || isField);
             string targetVar = null;
 
             if (!isSimple)
@@ -1403,26 +1398,32 @@ namespace Bridge.Translator
                 else
                 {
                     this.WriteOpenBracket();
-                    this.Write(JS.Types.System.Array.INDEX);
-                    this.WriteOpenParentheses();
+                    if (isArray)
+                    {
+                        this.Write(JS.Types.System.Array.INDEX);
+                        this.WriteOpenParentheses();
+                    }
                 }
 
                 index.AcceptVisitor(this.Emitter);
 
                 if (!this.isRefArg)
                 {
-                    this.WriteComma();
-
-                    if (targetVar != null)
+                    if (isArray)
                     {
-                        this.Write(targetVar);
-                    }
-                    else
-                    {
-                        indexerExpression.Target.AcceptVisitor(this.Emitter);
-                    }
+                        this.WriteComma();
 
-                    this.WriteCloseParentheses();
+                        if (targetVar != null)
+                        {
+                            this.Write(targetVar);
+                        }
+                        else
+                        {
+                            indexerExpression.Target.AcceptVisitor(this.Emitter);
+                        }
+
+                        this.WriteCloseParentheses();
+                    }
                     this.WriteCloseBracket();
                 }
 

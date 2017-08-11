@@ -4,8 +4,19 @@
     {
         public class NS
         {
-            public const string ROOT = "Bridge";
-            public const string System = "System";
+            public const string GLOBAL = "global::";
+            public const string BRIDGE = "Bridge";
+            public const string SYSTEM = "System";
+        }
+
+        public class Bridge
+        {
+            public const string DOTNAME = NS.BRIDGE + ".";
+        }
+
+        public class System
+        {
+            public const string DOTNAME = NS.SYSTEM + ".";
         }
 
         public class Attributes
@@ -15,6 +26,11 @@
             public const string FIELD_PROPERTY_NAME = "Bridge.FieldPropertyAttribute";
             public const string SERIALIZABLE_NAME = "Bridge.SerializableAttribute";
             public const string COMPILER_GENERATED_NAME = "System.Runtime.CompilerServices.CompilerGeneratedAttribute";
+
+            public class Template
+            {
+                public const string PROPERTY_FN = "Fn";
+            }
         }
 
         public class Methods

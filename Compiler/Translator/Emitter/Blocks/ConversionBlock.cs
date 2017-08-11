@@ -156,6 +156,21 @@ namespace Bridge.Translator
                 var expectedType = block.Emitter.Resolver.Resolver.GetExpectedType(expression);
                 int level = 0;
 
+                if (expression.Parent is ParenthesizedExpression && expression.Parent.Parent is CastExpression)
+                {
+                    var prr = block.Emitter.Resolver.ResolveNode(expression.Parent, block.Emitter);
+                    var pconversion = block.Emitter.Resolver.Resolver.GetConversion((Expression)expression.Parent);
+                    var pexpectedType = block.Emitter.Resolver.Resolver.GetExpectedType((Expression)expression.Parent);
+
+                    if (pconversion.IsBoxingConversion)
+                    {
+                        rr = prr;
+                        conversion = pconversion;
+                        expectedType = pexpectedType;
+                        expression = (Expression)expression.Parent;
+                    }
+                }
+
                 return ConversionBlock.DoConversion(block, expression, conversion, expectedType, level, rr);
             }
             catch
@@ -165,7 +180,7 @@ namespace Bridge.Translator
             return 0;
         }
 
-        private static string GetBoxedType(IType itype, IEmitter emitter)
+        internal static string GetBoxedType(IType itype, IEmitter emitter)
         {
             if (NullableType.IsNullable(itype))
             {
@@ -177,11 +192,6 @@ namespace Bridge.Translator
 
         internal static string GetInlineMethod(IEmitter emitter, string name, IType returnType, IType type, Expression expression)
         {
-            if (emitter.NamedBoxedFunctions.ContainsKey(type) && emitter.NamedBoxedFunctions[type].ContainsKey(name) && emitter.NamedBoxedFunctions[type][name] != null)
-            {
-                return JS.Vars.DBOX_ + "." + BridgeTypes.ToJsName(type, emitter, true) + "." + name.ToLowerCamelCase();
-            }
-
             var methodDef = ConversionBlock.GetBoxedMethod(name, returnType, type);
 
             if (methodDef != null)
@@ -201,6 +211,19 @@ namespace Bridge.Translator
                         return methodRef == null ? $"System.Nullable.{name.ToLowerCamelCase()}" : string.Format(template, methodRef, name.ToLowerCamelCase());
                     }
 
+                    var attr = methodDef.Attributes.First(a => a.AttributeType.FullName == "Bridge.TemplateAttribute");
+                    bool delegated = false;
+                    if (attr != null && attr.NamedArguments.Count > 0)
+                    {
+                        var namedArg = attr.NamedArguments.FirstOrDefault(arg => arg.Key.Name == CS.Attributes.Template.PROPERTY_FN);
+
+                        if (namedArg.Key != null)
+                        {
+                            inline = namedArg.Value.ConstantValue.ToString();
+                            delegated = true;
+                        }
+                    }
+
                     var writer = new Writer
                     {
                         InlineCode = inline,
@@ -214,29 +237,15 @@ namespace Bridge.Translator
                     argsInfo.ArgumentsExpressions = new Expression[] {expression};
                     argsInfo.ArgumentsNames = new string[] {"this"};
                     argsInfo.ThisArgument = "obj";
+                    argsInfo.ThisType = type;
                     new InlineArgumentsBlock(emitter, argsInfo, writer.InlineCode).Emit();
 
                     var result = emitter.Output.ToString();
                     emitter.Output = writer.Output;
                     emitter.IsNewLine = writer.IsNewLine;
 
-                    Dictionary<string, string> fn = null;
-
-                    if (emitter.NamedBoxedFunctions.ContainsKey(type))
-                    {
-                        fn = emitter.NamedBoxedFunctions[type];
-                    }
-                    else
-                    {
-                        fn = new Dictionary<string, string>();
-                        emitter.NamedBoxedFunctions.Add(type, fn);
-                    }
-
-                    result = string.Format("function (obj) {{ return {0}; }}", result);
-
-                    fn.Add(name, result);
-
-                    return JS.Vars.DBOX_ + "." + BridgeTypes.ToJsName(type, emitter, true) + "." + name.ToLowerCamelCase();
+                    result = delegated ? result : string.Format("function (obj) {{ return {0}; }}", result);
+                    return result;
                 }
 
             }
@@ -369,7 +378,7 @@ namespace Bridge.Translator
                     {
                         var memberDeclaringTypeDefinition = parent_rr.Member.DeclaringTypeDefinition;
                         isArgument = (block.Emitter.Validator.IsExternalType(memberDeclaringTypeDefinition) || block.Emitter.Validator.IsExternalType(parent_rr.Member))
-                                     && !(memberDeclaringTypeDefinition.Namespace == CS.NS.System || memberDeclaringTypeDefinition.Namespace.StartsWith(CS.NS.System + "."));
+                                     && !(memberDeclaringTypeDefinition.Namespace == CS.NS.SYSTEM || memberDeclaringTypeDefinition.Namespace.StartsWith(CS.NS.SYSTEM + "."));
 
                         var attr = parent_rr.Member.Attributes.FirstOrDefault(a => a.AttributeType.FullName == "Bridge.UnboxAttribute");
                          
@@ -411,7 +420,7 @@ namespace Bridge.Translator
                         block.WriteOpenParentheses();
                         block.AfterOutput2 += ", " + ConversionBlock.GetBoxedType(rr.Type, block.Emitter);
 
-                        var inlineMethod = ConversionBlock.GetInlineMethod(block.Emitter, "ToString",
+                        var inlineMethod = ConversionBlock.GetInlineMethod(block.Emitter, CS.Methods.TOSTRING,
                             block.Emitter.Resolver.Compilation.FindType(KnownTypeCode.String), rr.Type, expression);
 
                         if (inlineMethod != null)
@@ -419,7 +428,7 @@ namespace Bridge.Translator
                             block.AfterOutput2 += ", " + inlineMethod;
                         }
 
-                        inlineMethod = ConversionBlock.GetInlineMethod(block.Emitter, "GetHashCode",
+                        inlineMethod = ConversionBlock.GetInlineMethod(block.Emitter, CS.Methods.GETHASHCODE,
                             block.Emitter.Resolver.Compilation.FindType(KnownTypeCode.Int32), rr.Type, expression);
 
                         if (inlineMethod != null)

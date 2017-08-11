@@ -195,7 +195,7 @@ namespace Bridge.Translator
                     if (!String.IsNullOrEmpty(inlineScript) && (isBase || invocationExpression.Target is IdentifierExpression))
                     {
                         argsInfo.ThisArgument = "this";
-                        bool noThis = !inlineScript.Contains("{this}");
+                        bool noThis = !Helpers.HasThis(inlineScript);
 
                         if (inlineScript.StartsWith("<self>"))
                         {
@@ -689,8 +689,12 @@ namespace Bridge.Translator
                 }
             }
 
-           // Helpers.CheckValueTypeClone(this.Emitter.Resolver.ResolveNode(invocationExpression, this.Emitter), invocationExpression, this, pos);
-
+            var irr = targetResolve as InvocationResolveResult;
+            if (irr != null && irr.Member.MemberDefinition != null && irr.Member.MemberDefinition.ReturnType.Kind == TypeKind.TypeParameter)
+            {
+                Helpers.CheckValueTypeClone(this.Emitter.Resolver.ResolveNode(invocationExpression, this.Emitter), invocationExpression, this, pos);
+            }
+            
             this.Emitter.ReplaceAwaiterByVar = oldValue;
             this.Emitter.AsyncExpressionHandling = oldAsyncExpressionHandling;
         }

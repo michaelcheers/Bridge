@@ -1,6 +1,6 @@
 Bridge.merge(new System.Globalization.CultureInfo("gn-PY", true), {
     englishName: "Guarani (Paraguay)",
-    nativeName: "Guarani (Paraguái)",
+    nativeName: "Avañe’ẽ (Paraguái)",
 
     numberFormat: Bridge.merge(new System.Globalization.NumberFormatInfo(), {
         nanSymbol: "ndaha’éi papaha",
@@ -53,6 +53,6 @@ Bridge.merge(new System.Globalization.CultureInfo("gn-PY", true), {
         timeSeparator: ":",
         universalSortableDateTimePattern: "yyyy'-'MM'-'dd HH':'mm':'ss'Z'",
         yearMonthPattern: "MMMM, yyyy",
-        roundtripFormat: "yyyy'-'MM'-'dd'T'HH':'mm':'ss.uzzz"
+        roundtripFormat: "yyyy'-'MM'-'dd'T'HH':'mm':'ss.fffffffzzz"
     })
 });

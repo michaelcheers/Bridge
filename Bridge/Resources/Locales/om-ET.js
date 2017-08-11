@@ -10,10 +10,10 @@ Bridge.merge(new System.Globalization.CultureInfo("om-ET", true), {
         positiveInfinitySymbol: "∞",
         percentSymbol: "%",
         percentGroupSizes: [3],
-        percentDecimalDigits: 0,
+        percentDecimalDigits: 2,
         percentDecimalSeparator: ".",
         percentGroupSeparator: ",",
-        percentPositivePattern: 2,
+        percentPositivePattern: 1,
         percentNegativePattern: 1,
         currencySymbol: "Br",
         currencyGroupSizes: [3],
@@ -23,7 +23,7 @@ Bridge.merge(new System.Globalization.CultureInfo("om-ET", true), {
         currencyNegativePattern: 1,
         currencyPositivePattern: 0,
         numberGroupSizes: [3],
-        numberDecimalDigits: 0,
+        numberDecimalDigits: 2,
         numberDecimalSeparator: ".",
         numberGroupSeparator: ",",
         numberNegativePattern: 1
@@ -40,12 +40,12 @@ Bridge.merge(new System.Globalization.CultureInfo("om-ET", true), {
         fullDateTimePattern: "dddd, MMMM d, yyyy h:mm:ss tt",
         longDatePattern: "dddd, MMMM d, yyyy",
         longTimePattern: "h:mm:ss tt",
-        monthDayPattern: "dd MMMM",
+        monthDayPattern: "MMMM d",
         monthGenitiveNames: ["Amajjii","Guraandhala","Bitooteessa","Elba","Caamsa","Waxabajjii","Adooleessa","Hagayya","Fuulbana","Onkololeessa","Sadaasa","Muddee",""],
         monthNames: ["Amajjii","Guraandhala","Bitooteessa","Elba","Caamsa","Waxabajjii","Adooleessa","Hagayya","Fuulbana","Onkololeessa","Sadaasa","Muddee",""],
         pmDesignator: "WB",
         rfc1123: "ddd, dd MMM yyyy HH':'mm':'ss 'GMT'",
-        shortDatePattern: "dd/MM/yy",
+        shortDatePattern: "dd/MM/yyyy",
         shortestDayNames: ["Dil","Wix","Qib","Rob","Kam","Jim","San"],
         shortTimePattern: "h:mm tt",
         sortableDateTimePattern: "yyyy'-'MM'-'dd'T'HH':'mm':'ss",
@@ -53,6 +53,6 @@ Bridge.merge(new System.Globalization.CultureInfo("om-ET", true), {
         timeSeparator: ":",
         universalSortableDateTimePattern: "yyyy'-'MM'-'dd HH':'mm':'ss'Z'",
         yearMonthPattern: "MMMM yyyy",
-        roundtripFormat: "yyyy'-'MM'-'dd'T'HH':'mm':'ss.uzzz"
+        roundtripFormat: "yyyy'-'MM'-'dd'T'HH':'mm':'ss.fffffffzzz"
     })
 });

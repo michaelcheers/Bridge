@@ -108,11 +108,6 @@ namespace Bridge.Translator
                     IsObjectLiteral = this.IsObjectLiteral(typeDeclaration),
                     Type = rr.Type
                 };
-
-                if (parentTypeInfo != null && JS.Reserved.StaticNames.Any(n => String.Equals(this.CurrentType.Name, n, StringComparison.InvariantCultureIgnoreCase)))
-                {
-                    throw new EmitterException(typeDeclaration, "Nested class cannot have such name: " + this.CurrentType.Name + ". Please rename it.");
-                }
             }
             else
             {
@@ -617,13 +612,14 @@ namespace Bridge.Translator
                         if (value is string)
                         {
                             name = value.ToString();
+                            name = Helpers.ConvertNameTokens(name, enumStringName);
                         }
                         else if (value is bool)
                         {
                             name = (bool)value ? Object.Net.Utilities.StringUtils.ToLowerCamelCase(member.Member.Name) : member.Member.Name;
                         }
 
-                        if (member.Member.IsStatic && Helpers.IsReservedStaticName(name))
+                        if (member.Member.IsStatic && Helpers.IsReservedStaticName(name, false))
                         {
                             name = Helpers.ChangeReservedWord(name);
                         }
@@ -839,10 +835,17 @@ namespace Bridge.Translator
                 (resolveResult != null && resolveResult.Type != null && resolveResult.Type.FullName == (Translator.Bridge_ASSEMBLY + ".ModuleAttribute")))
             {
                 Module module = null;
-
-                if (attr.Arguments.Count == 1)
+                var args = ((InvocationResolveResult) resolveResult).Arguments.Select(a=> a.ConstantValue).ToList();
+                var positionArgs =
+                    ((InvocationResolveResult) resolveResult).InitializerStatements.Select(s => new
+                    {
+                        Name = ((MemberResolveResult)((OperatorResolveResult)s).Operands[0]).Member.Name,
+                        Value = ((OperatorResolveResult)s).Operands[1].ConstantValue
+                    }).ToList();
+                
+                if (args.Count == 1)
                 {
-                    var obj = this.GetAttributeArgumentValue(attr, resolveResult, 0);
+                    var obj = args[0];
 
                     if (obj is bool)
                     {
@@ -861,10 +864,10 @@ namespace Bridge.Translator
                         module = new Module();
                     }
                 }
-                else if (attr.Arguments.Count == 2)
+                else if (args.Count == 2)
                 {
-                    var first = this.GetAttributeArgumentValue(attr, resolveResult, 0);
-                    var second = this.GetAttributeArgumentValue(attr, resolveResult, 1);
+                    var first = args[0];
+                    var second = args[1];
 
                     if (first is string)
                     {
@@ -888,17 +891,32 @@ namespace Bridge.Translator
                         module = new Module(mname != null ? mname.ToString() : "", (ModuleType)(int)mtype);
                     }
                 }
-                else if (attr.Arguments.Count == 3)
+                else if (args.Count == 3)
                 {
-                    var mtype = this.GetAttributeArgumentValue(attr, resolveResult, 0);
-                    var mname = this.GetAttributeArgumentValue(attr, resolveResult, 1);
-                    var preventName = this.GetAttributeArgumentValue(attr, resolveResult, 2);
+                    var mtype = args[0];
+                    var mname = args[1];
+                    var preventName = args[2];
 
                     module = new Module(mname != null ? mname.ToString() : "", (ModuleType)(int)mtype, (bool)preventName);
                 }
                 else
                 {
                     module = new Module();
+                }
+
+                if (positionArgs.Count > 0)
+                {
+                    foreach (var arg in positionArgs)
+                    {
+                        if (arg.Name == "Name")
+                        {
+                            module.Name = arg.Value != null ? (string)arg.Value : "";
+                        }
+                        else if (arg.Name == "ExportAsNamespace")
+                        {
+                            module.ExportAsNamespace = arg.Value != null ? (string)arg.Value : "";
+                        }
+                    }
                 }
 
                 this.AssemblyInfo.Module = module;

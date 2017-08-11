@@ -3,13 +3,13 @@ Bridge.merge(new System.Globalization.CultureInfo("ne", true), {
     nativeName: "नेपाली",
 
     numberFormat: Bridge.merge(new System.Globalization.NumberFormatInfo(), {
-        nanSymbol: "अंक नभएको",
+        nanSymbol: "NaN",
         negativeSign: "-",
         positiveSign: "+",
         negativeInfinitySymbol: "-∞",
         positiveInfinitySymbol: "∞",
         percentSymbol: "%",
-        percentGroupSizes: [3,2],
+        percentGroupSizes: [3],
         percentDecimalDigits: 2,
         percentDecimalSeparator: ".",
         percentGroupSeparator: ",",
@@ -20,9 +20,9 @@ Bridge.merge(new System.Globalization.CultureInfo("ne", true), {
         currencyDecimalDigits: 2,
         currencyDecimalSeparator: ".",
         currencyGroupSeparator: ",",
-        currencyNegativePattern: 1,
-        currencyPositivePattern: 0,
-        numberGroupSizes: [3,2],
+        currencyNegativePattern: 9,
+        currencyPositivePattern: 2,
+        numberGroupSizes: [3],
         numberDecimalDigits: 2,
         numberDecimalSeparator: ".",
         numberGroupSeparator: ",",
@@ -53,6 +53,6 @@ Bridge.merge(new System.Globalization.CultureInfo("ne", true), {
         timeSeparator: ":",
         universalSortableDateTimePattern: "yyyy'-'MM'-'dd HH':'mm':'ss'Z'",
         yearMonthPattern: "MMMM,yyyy",
-        roundtripFormat: "yyyy'-'MM'-'dd'T'HH':'mm':'ss.uzzz"
+        roundtripFormat: "yyyy'-'MM'-'dd'T'HH':'mm':'ss.fffffffzzz"
     })
 });

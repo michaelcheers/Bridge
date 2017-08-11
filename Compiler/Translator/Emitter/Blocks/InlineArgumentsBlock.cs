@@ -1,3 +1,4 @@
+using System;
 using Bridge.Contract;
 using Bridge.Contract.Constants;
 using ICSharpCode.NRefactory.CSharp;
@@ -236,10 +237,25 @@ namespace Bridge.Translator
             this.Write(name);
         }
 
-        private string[] allowedModifiers = new[] {"default", "defaultFn", "raw", "plain", "body", "gettmp", "version", "tmp", "type", "array", "module", "GetHashCode", "ToString"};
+        private string[] allowedModifiers = new[] {"default", "defaultFn", "raw", "plain", "body", "gettmp", "version", "tmp", "type", "array", "module", CS.Methods.GETHASHCODE, CS.Methods.TOSTRING };
 
         protected virtual void EmitInlineExpressionList(ArgumentsInfo argsInfo, string inline, bool asRef = false, bool isNull = false, bool? definition = null)
         {
+            IMember member = this.Method ?? argsInfo.Method ?? argsInfo.ResolveResult?.Member;
+            if (member == null && argsInfo.Expression != null && argsInfo.Expression.Parent != null)
+            {
+                var rre = this.Emitter.Resolver.ResolveNode(argsInfo.Expression, this.Emitter) as MemberResolveResult;
+                if (rre != null)
+                {
+                    member = rre.Member;
+                }
+            }
+
+            if (member != null)
+            {
+                inline = Helpers.ConvertTokens(this.Emitter, inline, member);
+            }
+
             IEnumerable<NamedParamExpression> expressions = argsInfo.NamedExpressions;
             IEnumerable<TypeParamExpression> typeParams = argsInfo.TypeArguments;
             bool addClose = false;
@@ -255,7 +271,7 @@ namespace Bridge.Translator
                     withoutTypeParams = !definition.Value;
                 }
 
-                if (withoutTypeParams && (!this.Method.IsStatic || this.Method.IsExtensionMethod && this.TargetResolveResult is ThisResolveResult) && (this.TargetResolveResult is ThisResolveResult || this.TargetResolveResult == null) && (inline.Contains("{this}") || this.Method.IsStatic || this.Method.IsExtensionMethod && inline.Contains("{" + this.Method.Parameters.First().Name + "}")))
+                if (withoutTypeParams && (!this.Method.IsStatic || this.Method.IsExtensionMethod && this.TargetResolveResult is ThisResolveResult) /*&& (this.TargetResolveResult is ThisResolveResult || this.TargetResolveResult == null)*/ && (inline.Contains("{this}") || this.Method.IsStatic || this.Method.IsExtensionMethod && inline.Contains("{" + this.Method.Parameters.First().Name + "}")))
                 {
                     this.Write(JS.Funcs.BRIDGE_BIND);
                     this.Write("(this, ");
@@ -590,7 +606,7 @@ namespace Bridge.Translator
                 }
                 else if (key == "this" || key == argsInfo.ThisName || (key == "0" && argsInfo.IsExtensionMethod))
                 {
-                    if(modifier == "GetHashCode" || modifier == "ToString")
+                    if(modifier == CS.Methods.GETHASHCODE || modifier == CS.Methods.TOSTRING)
                     {
                         AstNode node = null;
                         if (argsInfo.ThisArgument is AstNode)
@@ -613,7 +629,7 @@ namespace Bridge.Translator
                             }
 
                             var inlineMethod = ConversionBlock.GetInlineMethod(this.Emitter, modifier,
-                                           modifier == "ToString" ? this.Emitter.Resolver.Compilation.FindType(KnownTypeCode.String) :
+                                           modifier == CS.Methods.TOSTRING ? this.Emitter.Resolver.Compilation.FindType(KnownTypeCode.String) :
                                             this.Emitter.Resolver.Compilation.FindType(KnownTypeCode.Int32), type, argsInfo.Expression);
                             this.Write(inlineMethod);
                         }
@@ -630,16 +646,24 @@ namespace Bridge.Translator
                             node = argsInfo.Expression;
                         }
 
+                        IType type = null;
                         if (node != null)
                         {
                             var rr = this.Emitter.Resolver.ResolveNode(node, this.Emitter);
-                            var type = rr.Type;
+                            type = rr.Type;
                             var mrr = rr as MemberResolveResult;
                             if (mrr != null && mrr.Member.ReturnType.Kind != TypeKind.Enum && mrr.TargetResult != null)
                             {
                                 type = mrr.TargetResult.Type;
                             }
+                        }
+                        else
+                        {
+                            type = this.ArgumentsInfo.ThisType;
+                        }
 
+                        if (type != null)
+                        {
                             bool needName = this.NeedName(type);
 
                             if (needName)
@@ -692,7 +716,7 @@ namespace Bridge.Translator
 
                     if (exprs.Count > 0)
                     {
-                        if (modifier == "GetHashCode" || modifier == "ToString")
+                        if (modifier == CS.Methods.GETHASHCODE || modifier == CS.Methods.TOSTRING)
                         {
                             IType type = null;
                             if (paramsName == key && paramsType != null)
@@ -706,7 +730,7 @@ namespace Bridge.Translator
                             }
 
                             var inlineMethod = ConversionBlock.GetInlineMethod(this.Emitter, modifier,
-                                               modifier == "ToString" ? this.Emitter.Resolver.Compilation.FindType(KnownTypeCode.String) :
+                                               modifier == CS.Methods.TOSTRING ? this.Emitter.Resolver.Compilation.FindType(KnownTypeCode.String) :
                                                 this.Emitter.Resolver.Compilation.FindType(KnownTypeCode.Int32), type, exprs[0]);
                             this.Write(inlineMethod);
                         }
@@ -1040,14 +1064,14 @@ namespace Bridge.Translator
                     }
                     else if (typeParams != null)
                     {
-                        if (modifier == "GetHashCode" || modifier == "ToString")
+                        if (modifier == CS.Methods.GETHASHCODE || modifier == CS.Methods.TOSTRING)
                         {
                             var iType = this.GetTypeByKey(typeParams, key);
 
                             if (iType != null)
                             {
                                 var inlineMethod = ConversionBlock.GetInlineMethod(this.Emitter, modifier,
-                                    modifier == "ToString"
+                                    modifier == CS.Methods.TOSTRING
                                         ? this.Emitter.Resolver.Compilation.FindType(KnownTypeCode.String)
                                         : this.Emitter.Resolver.Compilation.FindType(KnownTypeCode.Int32), iType.IType,
                                     null);

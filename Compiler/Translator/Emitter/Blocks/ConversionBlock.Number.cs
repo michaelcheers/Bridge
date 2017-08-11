@@ -405,6 +405,59 @@ namespace Bridge.Translator
                 return;
             }
 
+            var binaryOperatorExpression = expression as BinaryOperatorExpression;
+            if (binaryOperatorExpression != null)
+            {
+                var rr = block.Emitter.Resolver.ResolveNode(expression, block.Emitter);
+                var leftResolverResult = block.Emitter.Resolver.ResolveNode(binaryOperatorExpression.Left, block.Emitter);
+                var rightResolverResult = block.Emitter.Resolver.ResolveNode(binaryOperatorExpression.Right, block.Emitter);
+                if (rr != null)
+                {
+                    if (binaryOperatorExpression.Operator == BinaryOperatorType.Multiply &&
+                        !(block.Emitter.IsJavaScriptOverflowMode && !ConversionBlock.InsideOverflowContext(block.Emitter, binaryOperatorExpression)) &&
+                        (
+                            (Helpers.IsInteger32Type(leftResolverResult.Type, block.Emitter.Resolver) &&
+                            Helpers.IsInteger32Type(rightResolverResult.Type, block.Emitter.Resolver) &&
+                            Helpers.IsInteger32Type(rr.Type, block.Emitter.Resolver)) ||
+
+                            (Helpers.IsInteger32Type(block.Emitter.Resolver.Resolver.GetExpectedType(binaryOperatorExpression.Left), block.Emitter.Resolver) &&
+                            Helpers.IsInteger32Type(block.Emitter.Resolver.Resolver.GetExpectedType(binaryOperatorExpression.Right), block.Emitter.Resolver) &&
+                            Helpers.IsInteger32Type(rr.Type, block.Emitter.Resolver))
+                        ))
+                    {
+                        return;
+                    }
+                }
+            }
+
+            var assignmentExpression = expression as AssignmentExpression;
+            if (assignmentExpression != null)
+            {
+                var leftResolverResult = block.Emitter.Resolver.ResolveNode(assignmentExpression.Left, block.Emitter);
+                var rightResolverResult = block.Emitter.Resolver.ResolveNode(assignmentExpression.Right, block.Emitter);
+                var rr = block.Emitter.Resolver.ResolveNode(assignmentExpression, block.Emitter);
+
+                if (assignmentExpression.Operator == AssignmentOperatorType.Multiply &&
+                    !(block.Emitter.IsJavaScriptOverflowMode ||
+                      ConversionBlock.InsideOverflowContext(block.Emitter, assignmentExpression)) &&
+                    (
+                        (Helpers.IsInteger32Type(leftResolverResult.Type, block.Emitter.Resolver) &&
+                         Helpers.IsInteger32Type(rightResolverResult.Type, block.Emitter.Resolver) &&
+                         Helpers.IsInteger32Type(rr.Type, block.Emitter.Resolver)) ||
+
+                        (Helpers.IsInteger32Type(
+                             block.Emitter.Resolver.Resolver.GetExpectedType(assignmentExpression.Left),
+                             block.Emitter.Resolver) &&
+                         Helpers.IsInteger32Type(
+                             block.Emitter.Resolver.Resolver.GetExpectedType(assignmentExpression.Right),
+                             block.Emitter.Resolver) &&
+                         Helpers.IsInteger32Type(rr.Type, block.Emitter.Resolver))
+                    ))
+                {
+                    return;
+                }
+            }
+
             if (isChecked)
             {
                 block.Write(JS.Types.BRIDGE_INT + ".check(");
@@ -616,7 +669,7 @@ namespace Bridge.Translator
             NarrowingNumericOrEnumerationConversion(block, expression, NullableType.IsNullable(targetType) ? NullableType.GetUnderlyingType(targetType) : targetType, true, isChecked, NullableType.IsNullable(sourceType));
         }
 
-        public static bool IsInCheckedContext(IEmitter emitter, Expression expression)
+        public static bool IsInCheckedContext(IEmitter emitter, Expression expression, bool? defValue = null)
         {
             var found = false;
             expression.GetParent(p =>
@@ -641,10 +694,15 @@ namespace Bridge.Translator
                 return true;
             }
 
+            if (defValue.HasValue)
+            {
+                return defValue.Value;
+            }
+
             return emitter.AssemblyInfo.OverflowMode.HasValue && emitter.AssemblyInfo.OverflowMode == OverflowMode.Checked;
         }
 
-        public static bool IsInUncheckedContext(IEmitter emitter, Expression expression)
+        public static bool IsInUncheckedContext(IEmitter emitter, Expression expression, bool? defValue = null)
         {
             var found = false;
             expression.GetParent(p =>
@@ -667,6 +725,11 @@ namespace Bridge.Translator
             if (found)
             {
                 return true;
+            }
+
+            if (defValue.HasValue)
+            {
+                return defValue.Value;
             }
 
             return !emitter.AssemblyInfo.OverflowMode.HasValue || emitter.AssemblyInfo.OverflowMode == OverflowMode.Unchecked;

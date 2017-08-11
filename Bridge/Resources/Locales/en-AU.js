@@ -6,8 +6,8 @@ Bridge.merge(new System.Globalization.CultureInfo("en-AU", true), {
         nanSymbol: "NaN",
         negativeSign: "-",
         positiveSign: "+",
-        negativeInfinitySymbol: "-Infinity",
-        positiveInfinitySymbol: "Infinity",
+        negativeInfinitySymbol: "-∞",
+        positiveInfinitySymbol: "∞",
         percentSymbol: "%",
         percentGroupSizes: [3],
         percentDecimalDigits: 2,
@@ -40,7 +40,7 @@ Bridge.merge(new System.Globalization.CultureInfo("en-AU", true), {
         fullDateTimePattern: "dddd, d MMMM yyyy h:mm:ss tt",
         longDatePattern: "dddd, d MMMM yyyy",
         longTimePattern: "h:mm:ss tt",
-        monthDayPattern: "MMMM d",
+        monthDayPattern: "d MMMM",
         monthGenitiveNames: ["January","February","March","April","May","June","July","August","September","October","November","December",""],
         monthNames: ["January","February","March","April","May","June","July","August","September","October","November","December",""],
         pmDesignator: "PM",
@@ -53,6 +53,6 @@ Bridge.merge(new System.Globalization.CultureInfo("en-AU", true), {
         timeSeparator: ":",
         universalSortableDateTimePattern: "yyyy'-'MM'-'dd HH':'mm':'ss'Z'",
         yearMonthPattern: "MMMM yyyy",
-        roundtripFormat: "yyyy'-'MM'-'dd'T'HH':'mm':'ss.uzzz"
+        roundtripFormat: "yyyy'-'MM'-'dd'T'HH':'mm':'ss.fffffffzzz"
     })
 });

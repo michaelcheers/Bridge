@@ -282,7 +282,7 @@ namespace Bridge.Contract
             if (globalMethods != null)
             {
                 var value = globalMethods.PositionalArguments.Count > 0 && (bool)globalMethods.PositionalArguments.First().ConstantValue;
-                globalTarget = !removeGlobal || value ? "Bridge.global" : "";
+                globalTarget = !removeGlobal || value ? JS.Types.Bridge.Global.NAME : "";
             }
             else
             {
@@ -306,7 +306,7 @@ namespace Bridge.Contract
             return globalTarget;
         }
 
-        public static string ToJsName(IType type, IEmitter emitter, bool asDefinition = false, bool excludens = false, bool isAlias = false, bool skipMethodTypeParam = false, bool removeScope = true, bool nomodule = false, bool ignoreLiteralName = true)
+        public static string ToJsName(IType type, IEmitter emitter, bool asDefinition = false, bool excludens = false, bool isAlias = false, bool skipMethodTypeParam = false, bool removeScope = true, bool nomodule = false, bool ignoreLiteralName = true, bool ignoreVirtual = false)
         {
             var itypeDef = type.GetDefinition();
             BridgeType bridgeType = emitter.BridgeTypes.Get(type, true);
@@ -411,7 +411,7 @@ namespace Bridge.Contract
 
                 if (typeDef.IsNested && !excludens)
                 {
-                    name = BridgeTypes.ToJsName(typeDef.DeclaringType, emitter, true);
+                    name = BridgeTypes.ToJsName(typeDef.DeclaringType, emitter, true, ignoreVirtual: true);
                 }
 
                 name = (string.IsNullOrEmpty(name) ? "" : (name + ".")) + BridgeTypes.ConvertName(emitter.GetTypeName(itypeDef, typeDef));
@@ -420,7 +420,7 @@ namespace Bridge.Contract
             {
                 if (type.DeclaringType != null && !excludens)
                 {
-                    name = BridgeTypes.ToJsName(type.DeclaringType, emitter, true);
+                    name = BridgeTypes.ToJsName(type.DeclaringType, emitter, true, ignoreVirtual: true);
                 }
 
                 name = (string.IsNullOrEmpty(name) ? "" : (name + ".")) + BridgeTypes.ConvertName(type.Name);
@@ -433,7 +433,7 @@ namespace Bridge.Contract
             }
 
             var tDef = type.GetDefinition();
-            var skipSuffix = tDef != null && tDef.ParentAssembly.AssemblyName != CS.NS.ROOT && emitter.Validator.IsExternalType(tDef) && Helpers.IsIgnoreGeneric(tDef);
+            var skipSuffix = tDef != null && tDef.ParentAssembly.AssemblyName != CS.NS.BRIDGE && emitter.Validator.IsExternalType(tDef) && Helpers.IsIgnoreGeneric(tDef);
 
             if (!hasTypeDef && !isCustomName && type.TypeArguments.Count > 0 && !skipSuffix)
             {
@@ -483,7 +483,7 @@ namespace Bridge.Contract
                             sb.Append("\" + " + JS.Types.Bridge.GET_TYPE_ALIAS + "(");
                         }
 
-                        var typeArgName = BridgeTypes.ToJsName(typeArg, emitter, asDefinition, false, true, skipMethodTypeParam);
+                        var typeArgName = BridgeTypes.ToJsName(typeArg, emitter, asDefinition, false, true, skipMethodTypeParam, ignoreVirtual:true);
 
                         if (!needGet && typeArgName.StartsWith("\""))
                         {
@@ -546,27 +546,30 @@ namespace Bridge.Contract
                 }
             }
 
-            var td = type.GetDefinition();
-            if (td != null && emitter.Validator.IsVirtualType(td))
+            if (!ignoreVirtual && !isAlias)
             {
-                string fnName = td.Kind == TypeKind.Interface ? JS.Types.Bridge.GET_INTERFACE : JS.Types.Bridge.GET_CLASS;
-                name = fnName + "(\"" + name + "\")";
-            }
-            else if (!isAlias && itypeDef != null && itypeDef.Kind == TypeKind.Interface)
-            {
-                var externalInterface = emitter.Validator.IsExternalInterface(itypeDef);
-                if (externalInterface != null && externalInterface.IsVirtual)
+                var td = type.GetDefinition();
+                if (td != null && emitter.Validator.IsVirtualType(td))
                 {
-                    name = JS.Types.Bridge.GET_INTERFACE +  "(\"" + name + "\")";
+                    string fnName = td.Kind == TypeKind.Interface ? JS.Types.Bridge.GET_INTERFACE : JS.Types.Bridge.GET_CLASS;
+                    name = fnName + "(\"" + name + "\")";
+                }
+                else if (!isAlias && itypeDef != null && itypeDef.Kind == TypeKind.Interface)
+                {
+                    var externalInterface = emitter.Validator.IsExternalInterface(itypeDef);
+                    if (externalInterface != null && externalInterface.IsVirtual)
+                    {
+                        name = JS.Types.Bridge.GET_INTERFACE + "(\"" + name + "\")";
+                    }
                 }
             }
 
             return name;
         }
 
-        public static string ToJsName(TypeDefinition type, IEmitter emitter, bool asDefinition = false, bool excludens = false)
+        public static string ToJsName(TypeDefinition type, IEmitter emitter, bool asDefinition = false, bool excludens = false, bool ignoreVirtual = false)
         {
-            return BridgeTypes.ToJsName(ReflectionHelper.ParseReflectionName(BridgeTypes.GetTypeDefinitionKey(type)).Resolve(emitter.Resolver.Resolver.TypeResolveContext), emitter, asDefinition, excludens);
+            return BridgeTypes.ToJsName(ReflectionHelper.ParseReflectionName(BridgeTypes.GetTypeDefinitionKey(type)).Resolve(emitter.Resolver.Resolver.TypeResolveContext), emitter, asDefinition, excludens, ignoreVirtual:ignoreVirtual);
         }
 
         public static string DefinitionToJsName(IType type, IEmitter emitter, bool ignoreLiteralName = true)
@@ -592,7 +595,17 @@ namespace Bridge.Contract
 
             var symbol = resolveResult.Type as ISymbol;
 
-            return BridgeTypes.ToJsName(resolveResult.Type, emitter, astType.Parent is TypeOfExpression && symbol != null && symbol.SymbolKind == SymbolKind.TypeDefinition);
+            var name = BridgeTypes.ToJsName(
+                resolveResult.Type,
+                emitter,
+                astType.Parent is TypeOfExpression && symbol != null && symbol.SymbolKind == SymbolKind.TypeDefinition);
+
+            if (!name.StartsWith(CS.Bridge.DOTNAME) && astType.ToString().StartsWith(CS.NS.GLOBAL))
+            {
+                return JS.Types.Bridge.Global.DOTNAME + name;
+            }
+
+            return name;
         }
 
         public static void EnsureModule(BridgeType type)
@@ -689,6 +702,21 @@ namespace Bridge.Contract
                 module = new Module();
             }
 
+            if (attr.NamedArguments.Count > 0)
+            {
+                foreach (var namedArgument in attr.NamedArguments)
+                {
+                    if (namedArgument.Key.Name == "Name")
+                    {
+                        module.Name = namedArgument.Value.ConstantValue != null ? (string)namedArgument.Value.ConstantValue : "";
+                    }
+                    else if (namedArgument.Key.Name == "ExportAsNamespace")
+                    {
+                        module.ExportAsNamespace = namedArgument.Value.ConstantValue != null ? (string)namedArgument.Value.ConstantValue : "";
+                    }
+                }
+            }
+
             type.Module = module;
         }
 
@@ -714,7 +742,7 @@ namespace Bridge.Contract
             {
                 if (!module.PreventModuleName || type.TypeInfo != null)
                 {
-                    moduleName = module.Name;
+                    moduleName = module.ExportAsNamespace;
                 }
 
                 EnsureDependencies(type, emitter, currentTypeInfo, module);
@@ -746,6 +774,7 @@ namespace Bridge.Contract
                 emitter.CurrentDependencies.Add(new ModuleDependency
                 {
                     DependencyName = module.Name,
+                    VariableName = module.ExportAsNamespace,
                     Type = module.Type,
                     PreventName = module.PreventModuleName
                 });

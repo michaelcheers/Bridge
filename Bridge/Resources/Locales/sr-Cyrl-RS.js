@@ -6,8 +6,8 @@ Bridge.merge(new System.Globalization.CultureInfo("sr-Cyrl-RS", true), {
         nanSymbol: "NaN",
         negativeSign: "-",
         positiveSign: "+",
-        negativeInfinitySymbol: "-бесконачност",
-        positiveInfinitySymbol: "+бесконачност",
+        negativeInfinitySymbol: "-∞",
+        positiveInfinitySymbol: "∞",
         percentSymbol: "%",
         percentGroupSizes: [3],
         percentDecimalDigits: 2,
@@ -45,7 +45,7 @@ Bridge.merge(new System.Globalization.CultureInfo("sr-Cyrl-RS", true), {
         monthNames: ["јануар","фебруар","март","април","мај","јун","јул","август","септембар","октобар","новембар","децембар",""],
         pmDesignator: "",
         rfc1123: "ddd, dd MMM yyyy HH':'mm':'ss 'GMT'",
-        shortDatePattern: "d.M.yyyy.",
+        shortDatePattern: "dd.MM.yyyy.",
         shortestDayNames: ["не","по","ут","ср","че","пе","су"],
         shortTimePattern: "H:mm",
         sortableDateTimePattern: "yyyy'-'MM'-'dd'T'HH':'mm':'ss",
@@ -53,6 +53,6 @@ Bridge.merge(new System.Globalization.CultureInfo("sr-Cyrl-RS", true), {
         timeSeparator: ":",
         universalSortableDateTimePattern: "yyyy'-'MM'-'dd HH':'mm':'ss'Z'",
         yearMonthPattern: "MMMM yyyy.",
-        roundtripFormat: "yyyy'-'MM'-'dd'T'HH':'mm':'ss.uzzz"
+        roundtripFormat: "yyyy'-'MM'-'dd'T'HH':'mm':'ss.fffffffzzz"
     })
 });

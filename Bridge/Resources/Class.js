@@ -31,8 +31,27 @@
             var props = config.properties;
             if (props) {
                 for (name in props) {
-                    var cfg = Bridge.property(statics ? scope : prototype, name, props[name], statics, cls);
+                    var v = props[name],
+                        d,
+                        cfg;
 
+                    if (v != null && Bridge.isJSObject(v) && (!v.get || !v.set)) {
+                        for (var k = 0; k < descriptors.length; k++) {
+                            if (descriptors[k].name === name) {
+                                d = descriptors[k];
+                            }
+                        }
+
+                        if (d && d.get && !v.get) {
+                            v.get = Bridge.emptyFn;
+                        }
+
+                        if (d && d.set && !v.set) {
+                            v.set = Bridge.emptyFn;
+                        }
+                    }
+
+                    cfg = Bridge.property(statics ? scope : prototype, name, v, statics, cls);
                     cfg.name = name;
                     cfg.cls = cls;
 
@@ -106,6 +125,7 @@
 
                 for (var i = 0; i < keys.length; i++) {
                     var name = keys[i];
+
                     if (reserved.indexOf(name) === -1) {
                         to[name] = obj[name];
                     }
@@ -119,32 +139,40 @@
                     Bridge.apply(to, obj.methods);
                 }
 
-                var config = {};
+                var config = {},
+                    write = false;
+
                 if (obj.props) {
                     config.properties = obj.props;
-                }
-                else if (obj.properties) {
+                    write = true;
+                } else if (obj.properties) {
                     config.properties = obj.properties;
+                    write = true;
                 }
 
                 if (obj.events) {
                     config.events = obj.events;
+                    write = true;
                 }
 
                 if (obj.alias) {
                     config.alias = obj.alias;
+                    write = true;
                 }
 
                 if (obj.ctors) {
                     if (obj.ctors.init) {
                         config.init = obj.ctors.init;
+                        write = true;
                         delete obj.ctors.init;
                     }
 
                     Bridge.apply(to, obj.ctors);
                 }
 
-                to.$config = config;
+                if (write) {
+                    to.$config = config;
+                }
             };
 
             if (obj.main) {
@@ -211,7 +239,7 @@
                     obj = prop.apply(null, args);
                     c = Bridge.define(Bridge.Class.genericName(className, args), obj, true, { fn: fn, args: args });
 
-                    if (!Bridge.Class.staticInitAllow) {
+                    if (!Bridge.Class.staticInitAllow && !Bridge.Class.queueIsBlocked) {
                         Bridge.Class.$queue.push(c);
                     }
 
@@ -284,6 +312,10 @@
 
             prop.$kind = prop.$kind || "class";
 
+            if (prop.$kind === "enum") {
+                extend = [System.Enum];
+            }
+
             if (prop.$noRegister === true) {
                 registerT = false;
                 delete prop.$noRegister;
@@ -324,7 +356,10 @@
                             if (Class.$$inherits && Class.$$inherits.length > 0 && Class.$$inherits[0].$staticInit) {
                                 Class.$$inherits[0].$staticInit();
                             }
-                            Class.$base.ctor.call(this);
+
+                            if (Class.$base.ctor) {
+                                Class.$base.ctor.call(this);
+                            }
                         }
                     };
                 }
@@ -469,8 +504,25 @@
                     if (name === "ctor") {
                         Class["$ctor"] = member;
                     } else {
+                        if (prop.$kind === "enum" && !Bridge.isFunction(member) && name.charAt(0) !== "$") {
+                            Class.$names = Class.$names || [];
+                            Class.$names.push({name: name, value: member});
+                        }
+
                         Class[name] = member;
                     }
+                }
+
+                if (prop.$kind === "enum" && Class.$names) {
+                    Class.$names = Class.$names.sort(function (i1, i2) {
+                        if (Bridge.isFunction(i1.value.eq)) {
+                            return i1.value.sub(i2.value).sign();
+                        }
+
+                        return i1.value - i2.value;
+                    }).map(function(i) {
+                        return i.name;
+                    });
                 }
             }
 
@@ -481,7 +533,7 @@
             Bridge.Class.setInheritors(Class, extend);
 
             fn = function () {
-                if (Bridge.Class.staticInitAllow) {
+                if (Bridge.Class.staticInitAllow && !Class.$isGenericTypeDefinition) {
                     Class.$staticInit = null;
 
                     if (Class.$initMembers) {
@@ -620,7 +672,7 @@
                             descriptor = descriptors[i];
                             break;
                         }
-                    }    
+                    }
                 }
 
                 var dcount = key.split("$").length;
@@ -875,8 +927,16 @@
             fn.$staticInit = function() {
                 fn.$typeArguments = Bridge.Reflection.createTypeParams(prop);
 
+                var old = Bridge.Class.staticInitAllow,
+                    oldIsBlocked = Bridge.Class.queueIsBlocked;
+                Bridge.Class.staticInitAllow = false;
+                Bridge.Class.queueIsBlocked = true;
+
                 var cfg = prop.apply(null, fn.$typeArguments),
                     extend = cfg.$inherits || cfg.inherits;
+
+                Bridge.Class.staticInitAllow = old;
+                Bridge.Class.queueIsBlocked = oldIsBlocked;
 
                 if (extend && Bridge.isFunction(extend)) {
                     extend = extend();
@@ -928,7 +988,7 @@
                              cls[name]();
                         });
                     })(t, t.prototype.$main.name || "Main");
-                    
+
                     t.prototype.$main = null;
                 }
             }

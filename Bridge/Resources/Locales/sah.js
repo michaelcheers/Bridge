@@ -3,13 +3,13 @@ Bridge.merge(new System.Globalization.CultureInfo("sah", true), {
     nativeName: "Саха",
 
     numberFormat: Bridge.merge(new System.Globalization.NumberFormatInfo(), {
-        nanSymbol: "NAN",
+        nanSymbol: "чыыһыла буотах",
         negativeSign: "-",
         positiveSign: "+",
         negativeInfinitySymbol: "-∞",
         positiveInfinitySymbol: "∞",
         percentSymbol: "%",
-        percentGroupSizes: [3,0],
+        percentGroupSizes: [3],
         percentDecimalDigits: 2,
         percentDecimalSeparator: ",",
         percentGroupSeparator: " ",
@@ -20,9 +20,9 @@ Bridge.merge(new System.Globalization.CultureInfo("sah", true), {
         currencyDecimalDigits: 2,
         currencyDecimalSeparator: ",",
         currencyGroupSeparator: " ",
-        currencyNegativePattern: 5,
-        currencyPositivePattern: 1,
-        numberGroupSizes: [3,0],
+        currencyNegativePattern: 8,
+        currencyPositivePattern: 3,
+        numberGroupSizes: [3],
         numberDecimalDigits: 2,
         numberDecimalSeparator: ",",
         numberGroupSeparator: " ",
@@ -40,7 +40,7 @@ Bridge.merge(new System.Globalization.CultureInfo("sah", true), {
         fullDateTimePattern: "dddd, yyyy 'с.' MMMM d 'күнэ' H:mm:ss",
         longDatePattern: "dddd, yyyy 'с.' MMMM d 'күнэ'",
         longTimePattern: "H:mm:ss",
-        monthDayPattern: "MMMM d 'күнэ'",
+        monthDayPattern: "MMMM d күнэ",
         monthGenitiveNames: ["тохсунньу","олунньу","кулун тутар","муус устар","ыам ыйын","бэс ыйын","от ыйын","атырдьах ыйын","балаҕан ыйын","алтынньы","сэтинньи","ахсынньы",""],
         monthNames: ["Тохсунньу","Олунньу","Кулун тутар","Муус устар","Ыам ыйа","Бэс ыйа","От ыйа","Атырдьах ыйа","Балаҕан ыйа","Алтынньы","Сэтинньи","Ахсынньы",""],
         pmDesignator: "КК",
@@ -53,6 +53,6 @@ Bridge.merge(new System.Globalization.CultureInfo("sah", true), {
         timeSeparator: ":",
         universalSortableDateTimePattern: "yyyy'-'MM'-'dd HH':'mm':'ss'Z'",
         yearMonthPattern: "yyyy 'с.' MMMM",
-        roundtripFormat: "yyyy'-'MM'-'dd'T'HH':'mm':'ss.uzzz"
+        roundtripFormat: "yyyy'-'MM'-'dd'T'HH':'mm':'ss.fffffffzzz"
     })
 });

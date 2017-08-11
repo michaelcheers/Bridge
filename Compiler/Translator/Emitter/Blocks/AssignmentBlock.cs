@@ -10,7 +10,7 @@ using System.Linq;
 
 namespace Bridge.Translator
 {
-    public class AssignmentBlock : AbstractEmitterBlock
+    public class AssignmentBlock : ConversionBlock
     {
         public AssignmentBlock(IEmitter emitter, AssignmentExpression assignmentExpression)
             : base(emitter, assignmentExpression)
@@ -25,7 +25,12 @@ namespace Bridge.Translator
             set;
         }
 
-        protected override void DoEmit()
+        protected override Expression GetExpression()
+        {
+            return this.AssignmentExpression;
+        }
+
+        protected override void EmitConversionExpression()
         {
             this.VisitAssignmentExpression();
         }
@@ -224,7 +229,7 @@ namespace Bridge.Translator
                 this.Emitter.AssignmentType = AssignmentOperatorType.Assign;
                 var oldValue1 = this.Emitter.ReplaceAwaiterByVar;
                 this.Emitter.ReplaceAwaiterByVar = true;
-                assignmentExpression.Left.AcceptVisitor(this.Emitter);
+                this.AcceptLeftExpression(assignmentExpression.Left, memberTargetrr);
 
                 if (this.Emitter.Writers.Count == initCount)
                 {
@@ -242,6 +247,81 @@ namespace Bridge.Translator
                 this.Emitter.ReplaceAwaiterByVar = true;
 
                 assignmentExpression.Right.AcceptVisitor(this.Emitter);
+
+                this.Write(")");
+
+                this.Emitter.ReplaceAwaiterByVar = oldValue1;
+                this.Emitter.AsyncExpressionHandling = asyncExpressionHandling;
+
+                if (this.Emitter.Writers.Count > initCount)
+                {
+                    this.PopWriter();
+                }
+
+                if (needReturnValue && !isField)
+                {
+                    if (needTempVar)
+                    {
+                        this.Write(", " + variable);
+                    }
+                    else
+                    {
+                        this.Write(", ");
+                        this.Emitter.IsAssignment = false;
+                        assignmentExpression.Right.AcceptVisitor(this.Emitter);
+                        this.Emitter.IsAssignment = oldAssigment;
+                    }
+                }
+
+                if (needReturnValue)
+                {
+                    this.Write(")");
+                }
+
+                return;
+            }
+
+            if (assignmentExpression.Operator == AssignmentOperatorType.Multiply &&
+                !(this.Emitter.IsJavaScriptOverflowMode && !ConversionBlock.InsideOverflowContext(this.Emitter, assignmentExpression)) &&
+                !isLong && !isLongExpected &&
+                (
+                    (Helpers.IsInteger32Type(leftResolverResult.Type, this.Emitter.Resolver) &&
+                    Helpers.IsInteger32Type(rightResolverResult.Type, this.Emitter.Resolver) &&
+                    Helpers.IsInteger32Type(rr.Type, this.Emitter.Resolver)) ||
+
+                    (Helpers.IsInteger32Type(this.Emitter.Resolver.Resolver.GetExpectedType(assignmentExpression.Left), this.Emitter.Resolver) &&
+                    Helpers.IsInteger32Type(this.Emitter.Resolver.Resolver.GetExpectedType(assignmentExpression.Right), this.Emitter.Resolver) &&
+                    Helpers.IsInteger32Type(rr.Type, this.Emitter.Resolver))
+                ))
+            {
+                this.Emitter.IsAssignment = true;
+                this.Emitter.AssignmentType = AssignmentOperatorType.Assign;
+                var oldValue1 = this.Emitter.ReplaceAwaiterByVar;
+                this.Emitter.ReplaceAwaiterByVar = true;
+                this.AcceptLeftExpression(assignmentExpression.Left, memberTargetrr);
+
+                if (this.Emitter.Writers.Count == initCount)
+                {
+                    this.Write(" = ");
+                }
+
+                this.Emitter.ReplaceAwaiterByVar = oldValue1;
+                this.Emitter.AssignmentType = oldAssigmentType;
+                this.Emitter.IsAssignment = oldAssigment;
+
+                isUint = NullableType.GetUnderlyingType(rr.Type).IsKnownType(KnownTypeCode.UInt32);
+                this.Write(JS.Types.BRIDGE_INT + "." + (isUint ? JS.Funcs.Math.UMUL : JS.Funcs.Math.MUL) + "(");
+                assignmentExpression.Left.AcceptVisitor(this.Emitter);
+                this.Write(", ");
+                oldValue1 = this.Emitter.ReplaceAwaiterByVar;
+                this.Emitter.ReplaceAwaiterByVar = true;
+
+                assignmentExpression.Right.AcceptVisitor(this.Emitter);
+
+                if (ConversionBlock.IsInCheckedContext(this.Emitter, assignmentExpression))
+                {
+                    this.Write(", 1");
+                }
 
                 this.Write(")");
 
@@ -295,7 +375,7 @@ namespace Bridge.Translator
                     {
                         this.Emitter.IsAssignment = true;
                         this.Emitter.AssignmentType = AssignmentOperatorType.Assign;
-                        assignmentExpression.Left.AcceptVisitor(this.Emitter);
+                        this.AcceptLeftExpression(assignmentExpression.Left, memberTargetrr);
                         this.Emitter.IsAssignment = false;
 
                         if (this.Emitter.Writers.Count == initCount)
@@ -333,7 +413,7 @@ namespace Bridge.Translator
                     this.Emitter.IsAssignment = false;
                 }
 
-                assignmentExpression.Left.AcceptVisitor(this.Emitter);
+                this.AcceptLeftExpression(assignmentExpression.Left, memberTargetrr);
 
                 if (delegateAssigment)
                 {
@@ -597,7 +677,9 @@ namespace Bridge.Translator
 
             if (needTempVar)
             {
+                int pos = this.Emitter.Output.Length;
                 this.Write(variable);
+                Helpers.CheckValueTypeClone(rr, assignmentExpression.Right, this, pos);
             }
             else
             {
@@ -672,6 +754,46 @@ namespace Bridge.Translator
                 }
 
                 this.Write(")");
+            }
+        }
+
+        private void AcceptLeftExpression(Expression left, ResolveResult rr)
+        {
+            var mrr = rr as MemberResolveResult;
+            if (!this.Emitter.InConstructor || mrr == null || !(mrr.Member is IProperty) || mrr.Member.IsStatic || mrr.Member.DeclaringTypeDefinition == null || !mrr.Member.DeclaringTypeDefinition.Equals(this.Emitter.TypeInfo.Type))
+            {
+                left.AcceptVisitor(this.Emitter);
+            }
+            else
+            {
+                var property = (IProperty)mrr.Member;
+                var proto = mrr.IsVirtualCall || property.IsVirtual || property.IsOverride;
+
+                var td = this.Emitter.GetTypeDefinition();
+                var prop = td.Properties.FirstOrDefault(p => p.Name == mrr.Member.Name);
+
+                if (proto && prop != null && prop.SetMethod == null)
+                {
+                    var name = OverloadsCollection.Create(this.Emitter, mrr.Member).GetOverloadName();
+                    this.Write(JS.Types.Bridge.ENSURE_BASE_PROPERTY + "(this, \"" + name + "\")");
+                    this.WriteDot();
+                    var alias = BridgeTypes.ToJsName(mrr.Member.DeclaringType, this.Emitter, isAlias: true);
+                    if (alias.StartsWith("\""))
+                    {
+                        alias = alias.Insert(1, "$");
+                        name = alias + "+\"$" + name + "\"";
+                        this.WriteIdentifier(name, false);
+                    }
+                    else
+                    {
+                        name = "$" + alias + "$" + name;
+                        this.WriteIdentifier(name);
+                    }
+                }
+                else
+                {
+                    left.AcceptVisitor(this.Emitter);
+                }
             }
         }
 

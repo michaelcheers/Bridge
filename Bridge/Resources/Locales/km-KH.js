@@ -3,13 +3,13 @@ Bridge.merge(new System.Globalization.CultureInfo("km-KH", true), {
     nativeName: "ភាសាខ្មែរ (កម្ពុជា)",
 
     numberFormat: Bridge.merge(new System.Globalization.NumberFormatInfo(), {
-        nanSymbol: "NAN",
+        nanSymbol: "NaN",
         negativeSign: "-",
         positiveSign: "+",
-        negativeInfinitySymbol: "-- អនន្ត",
-        positiveInfinitySymbol: "អនន្ត",
+        negativeInfinitySymbol: "-∞",
+        positiveInfinitySymbol: "∞",
         percentSymbol: "%",
-        percentGroupSizes: [3,0],
+        percentGroupSizes: [3],
         percentDecimalDigits: 2,
         percentDecimalSeparator: ".",
         percentGroupSeparator: ",",
@@ -22,7 +22,7 @@ Bridge.merge(new System.Globalization.CultureInfo("km-KH", true), {
         currencyGroupSeparator: ",",
         currencyNegativePattern: 5,
         currencyPositivePattern: 1,
-        numberGroupSizes: [3,0],
+        numberGroupSizes: [3],
         numberDecimalDigits: 2,
         numberDecimalSeparator: ".",
         numberGroupSeparator: ",",
@@ -53,6 +53,6 @@ Bridge.merge(new System.Globalization.CultureInfo("km-KH", true), {
         timeSeparator: ":",
         universalSortableDateTimePattern: "yyyy'-'MM'-'dd HH':'mm':'ss'Z'",
         yearMonthPattern: "'ខែ' MM 'ឆ្នាំ' yyyy",
-        roundtripFormat: "yyyy'-'MM'-'dd'T'HH':'mm':'ss.uzzz"
+        roundtripFormat: "yyyy'-'MM'-'dd'T'HH':'mm':'ss.fffffffzzz"
     })
 });
