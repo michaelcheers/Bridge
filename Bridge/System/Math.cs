@@ -7,59 +7,105 @@ namespace System
     public static class Math
     {
         [Convention]
-        public const double E = 2.7182818284590452354;
+        public const double E = 2.71828182845905;
 
         [Convention]
-        public const double PI = 3.14159265358979323846;
+        public const double PI = 3.14159265358979;
 
-        /**<summary>Returns the absolute value of a 32-bit signed integer.</summary>
-      <param name="value">A number that is greater than <see cref="F:System.Int32.MinValue" />, but less than or equal to <see cref="F:System.Int32.MaxValue" />.</param>
-      <returns>A 32-bit signed integer, x, such that 0 ≤ x ≤<see cref="F:System.Int32.MaxValue" />.</returns>
-      <exception cref="T:System.OverflowException">
-        <paramref name="value" /> equals <see cref="F:System.Int32.MinValue" />. </exception>*/
+        /// <summary>Returns the absolute value of a 32-bit signed integer.</summary>
+        ///       <param name="value">A number that is greater than <see cref="F:System.Int32.MinValue" />, but less than or equal to <see cref="F:System.Int32.MaxValue" />.</param>
+        ///       <returns>A 32-bit signed integer, x, such that 0 ≤ x ≤<see cref="F:System.Int32.MaxValue" />.</returns>
+        ///       <exception cref="T:System.OverflowException">
+        ///         <paramref name="value" /> equals <see cref="F:System.Int32.MinValue" />. </exception>
         public static extern int Abs(int value);
 
-        /**<summary>Returns the absolute value of a single-precision floating-point number.</summary>
-      <param name="value">A number that is greater than or equal to <see cref="F:System.Single.MinValue" />, but less than or equal to <see cref="F:System.Single.MaxValue" />.</param>
-      <returns>A single-precision floating-point number, x, such that 0 ≤ x ≤<see cref="F:System.Single.MaxValue" />.</returns>*/
+        /// <summary>Returns the absolute value of a single-precision floating-point number.</summary>
+        ///       <param name="value">A number that is greater than or equal to <see cref="F:System.Single.MinValue" />, but less than or equal to <see cref="F:System.Single.MaxValue" />.</param>
+        ///       <returns>A single-precision floating-point number, x, such that 0 ≤ x ≤<see cref="F:System.Single.MaxValue" />.</returns>
         public static extern float Abs(float value);
 
-        /**<summary>Returns the absolute value of a double-precision floating-point number.</summary>
-      <param name="value">A number that is greater than or equal to <see cref="F:System.Double.MinValue" />, but less than or equal to <see cref="F:System.Double.MaxValue" />.</param>
-      <returns>A double-precision floating-point number, x, such that 0 ≤ x ≤<see cref="F:System.Double.MaxValue" />.</returns>*/
+        /// <summary>Returns the absolute value of a double-precision floating-point number.</summary>
+        ///       <param name="value">A number that is greater than or equal to <see cref="F:System.Double.MinValue" />, but less than or equal to <see cref="F:System.Double.MaxValue" />.</param>
+        ///       <returns>A double-precision floating-point number, x, such that 0 ≤ x ≤<see cref="F:System.Double.MaxValue" />.</returns>
         public static extern double Abs(double value);
 
-        /**<summary>Returns the absolute value of a 64-bit signed integer.</summary>
-      <param name="value">A number that is greater than <see cref="F:System.Int64.MinValue" />, but less than or equal to <see cref="F:System.Int64.MaxValue" />.</param>
-      <returns>A 64-bit signed integer, x, such that 0 ≤ x ≤<see cref="F:System.Int64.MaxValue" />.</returns>
-      <exception cref="T:System.OverflowException">
-        <paramref name="value" /> equals <see cref="F:System.Int64.MinValue" />. </exception>
-         */
+        /// <summary>Returns the absolute value of a 64-bit signed integer.</summary>
+        ///       <param name="value">A number that is greater than <see cref="F:System.Int64.MinValue" />, but less than or equal to <see cref="F:System.Int64.MaxValue" />.</param>
+        ///       <returns>A 64-bit signed integer, x, such that 0 ≤ x ≤<see cref="F:System.Int64.MaxValue" />.</returns>
+        ///       <exception cref="T:System.OverflowException">
+        ///         <paramref name="value" /> equals <see cref="F:System.Int64.MinValue" />. </exception>
         [Template("{0}.abs()")]
         public static extern long Abs(long value);
 
-        /**
-         <summary>Returns the absolute value of a <see cref="T:System.Decimal" /> number.</summary>
-      <param name="value">A number that is greater than or equal to <see cref="F:System.Decimal.MinValue" />, but less than or equal to <see cref="F:System.Decimal.MaxValue" />. </param>
-      <returns>A decimal number, x, such that 0 ≤ x ≤<see cref="F:System.Decimal.MaxValue" />.</returns>
-             */
+        ///    <summary>Returns the absolute value of a <see cref="T:System.Decimal" /> number.</summary>
+        /// <param name="value">A number that is greater than or equal to <see cref="F:System.Decimal.MinValue" />, but less than or equal to <see cref="F:System.Decimal.MaxValue" />. </param>
+        /// <returns>A decimal number, x, such that 0 ≤ x ≤<see cref="F:System.Decimal.MaxValue" />.</returns>
         [Template("{0}.abs()")]
-        public static extern decimal Abs(decimal value);
+        public static extern Decimal Abs(Decimal value);
 
-        /**<summary>Returns the absolute value of a 16-bit signed integer.</summary>
-      <param name="value">A number that is greater than <see cref="F:System.Int16.MinValue" />, but less than or equal to <see cref="F:System.Int16.MaxValue" />.</param>
-      <returns>A 16-bit signed integer, x, such that 0 ≤ x ≤<see cref="F:System.Int16.MaxValue" />.</returns>
-      <exception cref="T:System.OverflowException">
-        <paramref name="value" /> equals <see cref="F:System.Int16.MinValue" />. </exception>
-         */
+        /// <summary>Returns the absolute value of a 16-bit signed integer.</summary>
+        ///       <param name="value">A number that is greater than <see cref="F:System.Int16.MinValue" />, but less than or equal to <see cref="F:System.Int16.MaxValue" />.</param>
+        ///       <returns>A 16-bit signed integer, x, such that 0 ≤ x ≤<see cref="F:System.Int16.MaxValue" />.</returns>
+        ///       <exception cref="T:System.OverflowException">
+        ///         <paramref name="value" /> equals <see cref="F:System.Int16.MinValue" />. </exception>
         public static extern short Abs(short value);
 
-        /**<summary>Returns the absolute value of an 8-bit signed integer.</summary>
-      <param name="value">A number that is greater than <see cref="F:System.SByte.MinValue" />, but less than or equal to <see cref="F:System.SByte.MaxValue" />.</param>
-      <returns>An 8-bit signed integer, x, such that 0 ≤ x ≤<see cref="F:System.SByte.MaxValue" />.</returns>
-      <exception cref="T:System.OverflowException">
-        <paramref name="value" /> equals <see cref="F:System.SByte.MinValue" />. </exception>*/
+        /// <summary>Returns the absolute value of an 8-bit signed integer.</summary>
+        ///       <param name="value">A number that is greater than <see cref="F:System.SByte.MinValue" />, but less than or equal to <see cref="F:System.SByte.MaxValue" />.</param>
+        ///       <returns>An 8-bit signed integer, x, such that 0 ≤ x ≤<see cref="F:System.SByte.MaxValue" />.</returns>
+        ///       <exception cref="T:System.OverflowException">
+        ///         <paramref name="value" /> equals <see cref="F:System.SByte.MinValue" />. </exception>
         public static extern sbyte Abs(sbyte value);
+
+        public static extern double Acos(double x);
+
+        public static extern double Asin(double x);
+
+        public static extern double Atan(double x);
+
+        public static extern double Atan2(double y, double x);
+
+        [Template("{d}.ceil()")]
+        public static extern Decimal Ceiling(Decimal d);
+
+        [Name("ceil")]
+        public static extern double Ceiling(double d);
+
+        public static extern double Cos(double x);
+
+        [Template("Bridge.Math.cosh({value})")]
+        public static extern double Cosh(double value);
+
+        [Template("Bridge.Math.divRem({a}, {b}, {result})")]
+        public static extern int DivRem(int a, int b, out int result);
+
+        [Template("System.Int64.divRem({a}, {b}, {result})")]
+        public static extern long DivRem(long a, long b, out long result);
+
+        public static extern double Exp(double x);
+
+        [Template("{x}.exponential()")]
+        public static extern Decimal Exp(Decimal x);
+
+        public static extern double Floor(double x);
+
+        [Template("{d}.floor()")]
+        public static extern Decimal Floor(Decimal d);
+
+        [Template("{x} - ({y} * Math.round({x} / {y}))")]
+        public static extern double IEEERemainder(double x, double y);
+
+        [Template("Math.round({d})")]
+        public static extern double JsRound(double d);
+
+        [Template("Bridge.Math.log({x})")]
+        public static extern double Log(double x);
+
+        [Template("Bridge.Math.logWithBase({x}, {logBase})")]
+        public static extern double Log(double x, double logBase);
+
+        [Template("Bridge.Math.logWithBase({x}, 10.0)")]
+        public static extern double Log10(double x);
 
         /// <summary>
         /// Returns the larger of two 8-bit unsigned integers.
@@ -150,7 +196,7 @@ namespace System
         /// <param name="val2">The second of two decimal numbers to compare.</param>
         /// <returns>Parameter val1 or val2, whichever is larger.</returns>
         [Template("System.Decimal.max({val1}, {val2})")]
-        public static extern decimal Max(decimal val1, decimal val2);
+        public static extern Decimal Max(Decimal val1, Decimal val2);
 
         /// <summary>
         /// Returns the smaller of two 8-bit unsigned integers.
@@ -241,113 +287,63 @@ namespace System
         /// <param name="val2">The second of two decimal numbers to compare.</param>
         /// <returns>Parameter val1 or val2, whichever is smaller.</returns>
         [Template("System.Decimal.min({val1}, {val2})")]
-        public static extern decimal Min(decimal val1, decimal val2);
-
-        public static extern double Random();
-
-        public static extern double Sqrt(double x);
-
-        [Template("{d}.ceil()")]
-        public static extern decimal Ceiling(decimal d);
-
-        [Name("ceil")]
-        public static extern double Ceiling(double d);
-
-        public static extern double Floor(double x);
-
-        [Template("{d}.floor()")]
-        public static extern decimal Floor(decimal d);
-
-        [Template("System.Decimal.round({x}, 6)")]
-        public static extern decimal Round(decimal x);
-
-        [Template("Bridge.Math.round({d}, 0, 6)")]
-        public static extern double Round(double d);
-
-        [Template("Math.round({d})")]
-        public static extern double JsRound(double d);
-
-        [Template("System.Decimal.toDecimalPlaces({d}, {digits}, 6)")]
-        public static extern decimal Round(decimal d, int digits);
-
-        [Template("Bridge.Math.round({d}, {digits}, 6)")]
-        public static extern double Round(double d, int digits);
-
-        [Template("System.Decimal.round({d}, {method})")]
-        public static extern decimal Round(decimal d, MidpointRounding method);
-
-        [Template("Bridge.Math.round({d}, 0, {method})")]
-        public static extern double Round(double d, MidpointRounding method);
-
-        [Template("System.Decimal.toDecimalPlaces({d}, {digits}, {method})")]
-        public static extern decimal Round(decimal d, int digits, MidpointRounding method);
-
-        [Template("Bridge.Math.round({d}, {digits}, {method})")]
-        public static extern double Round(double d, int digits, MidpointRounding method);
-
-        [Template("{x} - ({y} * Math.round({x} / {y}))")]
-        public static extern double IEEERemainder(double x, double y);
-
-        public static extern double Exp(double x);
-
-        [Template("{x}.exponential()")]
-        public static extern decimal Exp(decimal x);
-
-        [Template("Bridge.Math.log({x})")]
-        public static extern double Log(double x);
-
-        [Template("Bridge.Math.logWithBase({x}, {logBase})")]
-        public static extern double Log(double x, double logBase);
-
-        [Template("Bridge.Math.logWithBase({x}, 10.0)")]
-        public static extern double Log10(double x);
+        public static extern Decimal Min(Decimal val1, Decimal val2);
 
         [Template("{x}.pow({y})")]
-        public static extern decimal Pow(decimal x, decimal y);
+        public static extern Decimal Pow(Decimal x, Decimal y);
 
         public static extern double Pow(double x, double y);
 
         public static extern double Pow(int x, int y);
 
-        public static extern double Acos(double x);
+        public static extern double Random();
 
-        public static extern double Asin(double x);
+        [Template("System.Decimal.round({x}, 6)")]
+        public static extern Decimal Round(Decimal x);
 
-        public static extern double Atan(double x);
+        [Template("Bridge.Math.round({d}, 0, 6)")]
+        public static extern double Round(double d);
 
-        public static extern double Atan2(double y, double x);
+        [Template("System.Decimal.toDecimalPlaces({d}, {digits}, 6)")]
+        public static extern Decimal Round(Decimal d, int digits);
 
-        public static extern double Cos(double x);
+        [Template("Bridge.Math.round({d}, {digits}, 6)")]
+        public static extern double Round(double d, int digits);
 
-        public static extern double Sin(double x);
+        [Template("System.Decimal.round({d}, {method})")]
+        public static extern Decimal Round(Decimal d, MidpointRounding method);
 
-        public static extern double Tan(double x);
+        [Template("Bridge.Math.round({d}, 0, {method})")]
+        public static extern double Round(double d, MidpointRounding method);
 
-        [Template("Bridge.Int.trunc({d})")]
-        public static extern double Truncate(double d);
+        [Template("System.Decimal.toDecimalPlaces({d}, {digits}, {method})")]
+        public static extern Decimal Round(Decimal d, int digits, MidpointRounding method);
 
-        [Template("{d}.trunc()")]
-        public static extern decimal Truncate(decimal d);
+        [Template("Bridge.Math.round({d}, {digits}, {method})")]
+        public static extern double Round(double d, int digits, MidpointRounding method);
 
         [Template("Bridge.Int.sign({value})")]
         public static extern int Sign(double value);
 
         [Template("{value}.sign()")]
-        public static extern int Sign(decimal value);
+        public static extern int Sign(Decimal value);
 
-        [Template("Bridge.Math.divRem({a}, {b}, {result})")]
-        public static extern int DivRem(int a, int b, out int result);
-
-        [Template("System.Int64.divRem({a}, {b}, {result})")]
-        public static extern long DivRem(long a, long b, out long result);
+        public static extern double Sin(double x);
 
         [Template("Bridge.Math.sinh({value})")]
         public static extern double Sinh(double value);
 
-        [Template("Bridge.Math.cosh({value})")]
-        public static extern double Cosh(double value);
+        public static extern double Sqrt(double x);
+
+        public static extern double Tan(double x);
 
         [Template("Bridge.Math.tanh({value})")]
         public static extern double Tanh(double value);
+
+        [Template("Bridge.Int.trunc({d})")]
+        public static extern double Truncate(double d);
+
+        [Template("{d}.trunc()")]
+        public static extern Decimal Truncate(Decimal d);
     }
 }
