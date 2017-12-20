@@ -25,7 +25,7 @@ Bridge.define("System.String", {
             if (length > str.length - startIndex) {
                 throw new System.ArgumentOutOfRangeException("Index and length must refer to a location within the string");
             }
-
+            
             var s = str.substr(startIndex, length),
                 index = (arguments.length === 5 && arguments[4] % 2 !== 0) ? s.toLocaleUpperCase().lastIndexOf(value.toLocaleUpperCase()) : s.lastIndexOf(value);
 
@@ -37,6 +37,55 @@ Bridge.define("System.String", {
                     return index + startIndex;
                 }
             }
+        },
+        charCodeAt: function (str, idx) {
+            idx = idx || 0;
+            var code = str.charCodeAt(idx),
+                hi,
+                low;
+
+            if (0xD800 <= code && code <= 0xDBFF) {
+                hi = code;
+                low = str.charCodeAt(idx + 1);
+                if (isNaN(low)) {
+                    throw new System.Exception("High surrogate not followed by low surrogate");
+                }
+
+                return ((hi - 0xD800) * 0x400) + (low - 0xDC00) + 0x10000;
+            }
+
+            if (0xDC00 <= code && code <= 0xDFFF) {
+                return false;
+            }
+
+            return code;
+        },
+
+        fromCharCode: function (codePt) {
+            if (codePt > 0xFFFF) {
+                codePt -= 0x10000;
+                return String.fromCharCode(0xD800 + (codePt >> 10), 0xDC00 + (codePt & 0x3FF));
+            }
+
+            return String.fromCharCode(codePt);
+        },
+
+        fromCharArray: function (chars, startIndex, length) {
+            var result = "";
+
+            startIndex = startIndex || 0;
+            length = Bridge.isNumber(length) ? length : chars.length;
+
+            for (var i = 0; i < length; i++) {
+                var ch = chars[i + startIndex] | 0;
+                result += String.fromCharCode(ch);
+            }
+
+            return result;
+        },
+
+        lastIndexOf: function (s, search, startIndex, count) {
+            var index = s.lastIndexOf(search, startIndex);
 
             return -1;
         },
@@ -501,6 +550,38 @@ Bridge.define("System.String", {
             }
 
             return s;
+        },
+
+        copyTo: function (str, sourceIndex, destination, destinationIndex, count) {
+            if (destination == null) {
+                throw new System.ArgumentNullException("destination");
+            }
+
+            if (str == null) {
+                throw new System.ArgumentNullException("str");
+            }
+
+            if (count < 0) {
+                throw new System.ArgumentOutOfRangeException("count");
+            }
+
+            if (sourceIndex < 0) {
+                throw new System.ArgumentOutOfRangeException("sourceIndex");
+            }
+
+            if (count > str.length - sourceIndex) {
+                throw new System.ArgumentOutOfRangeException("sourceIndex");
+            }
+
+            if (destinationIndex > destination.length - count || destinationIndex < 0) {
+                throw new System.ArgumentOutOfRangeException("destinationIndex");
+            }
+
+            if (count > 0) {
+                for (var i = 0; i < count; i++) {
+                    destination[destinationIndex + i] = str.charCodeAt(sourceIndex + i);
+                }
+            }
         }
     }
 });
