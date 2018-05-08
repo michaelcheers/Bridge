@@ -262,8 +262,9 @@
             }
 
             if (tp === System.UInt64) {
-                if (v.gt(System.Decimal(-1)) && v.lt(System.Decimal(0)))
+                if (v.gt(System.Decimal(-1)) && v.lt(System.Decimal(0))) {
                     return System.UInt64(0);
+                }
                 if (v.value.isNegative()) {
                     throw new System.OverflowException();
                 }
